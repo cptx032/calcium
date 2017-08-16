@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Calcium</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="../calcium.js"></script>
+		<style type="text/css">
+			pre {
+				font-size: 6pt;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+		</style>
+	</head>
+	<body>
+		<pre id="screen"></pre>
+
+		<script type="text/javascript">
+			var calcium = new CalciumScreen(32);
+			var sprite = new CalciumSprite(0, 0, [0, 0, 0]);
+
+			var screen = document.getElementById('screen');
+			calcium.mainloop(function () {
+				calcium.clear();
+				calcium.plot(sprite);
+				calcium.draw(screen);
+
+				sprite.x += 1;
+
+				if (sprite.x >= 32) {
+					sprite.x = 0;
+					sprite.y += 1;
+				}
+
+				if (sprite.y >= 32) {
+					sprite.y = 0;
+				}
+			});
+		</script>
+	</body>
+</html>
