@@ -19,7 +19,7 @@
 
 		<script type="text/javascript">
 			var calcium = new CalciumScreen(32);
-			var sprite = new CalciumSprite(0, 0, [0, 0, 0]);
+			var sprite = new CalciumSprite(0, 0, [[0, 0, 0], [0, 0, 4]]);
 
 			var screen = document.getElementById('screen');
 			calcium.mainloop(function () {
@@ -37,6 +37,8 @@
 				if (sprite.y >= 32) {
 					sprite.y = 0;
 				}
+
+				sprite.next_frame();
 			});
 		</script>
 	</body>

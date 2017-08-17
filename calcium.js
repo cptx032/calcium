@@ -1,7 +1,26 @@
-var CalciumSprite = function(x, y, pixels) {
+var CalciumSprite = function(x, y, frames, frame_index) {
 	this.x = x;
 	this.y = y;
-	this.pixels = pixels;
+	this.frames = frames;
+	this.frame_index = frame_index || 0;
+};
+
+CalciumSprite.prototype.get_pixels = function () {
+	return this.frames[this.frame_index];
+};
+
+CalciumSprite.prototype.next_frame = function () {
+	this.frame_index += 1;
+	if (this.frame_index >= this.frames.length) {
+		this.frame_index = 0;
+	}
+};
+
+CalciumSprite.prototype.last_frame = function () {
+	this.frame_index -= 1;
+	if (this.frame_index < 0) {
+		this.frame_index = this.frames.length - 1;
+	}
 };
 
 var CalciumScreen = function(width, height, fps) {
@@ -53,12 +72,13 @@ CalciumScreen.prototype.set_pixel = function (x, y, level) {
 };
 
 CalciumScreen.prototype.plot = function (sprite) {
-	var length = sprite.pixels.length;
+	var pixels = sprite.get_pixels();
+	var length = pixels.length;
 	for (var pi = 0; pi < length; pi += 3) {
 		this.set_pixel(
-			sprite.x + sprite.pixels[pi],
-			sprite.y + sprite.pixels[pi + 1],
-			sprite.pixels[pi + 2]
+			sprite.x + pixels[pi],
+			sprite.y + pixels[pi + 1],
+			pixels[pi + 2]
 		);
 	}
 };
