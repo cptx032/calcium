@@ -43,13 +43,15 @@ for x in range(image.size[0]):
 		else:
 			level = 4
 		if a == 0:
-			level = 4
+			continue
 
-		lines[y][x] = levels[level] * 2
+		# lines[y][x] = levels[level] * 2
 
-print '<html>'
-print '<meta charset="utf-8">'
-print '<pre style="font-size: 2pt; ">'
-print '\n'.join([''.join(i) for i in lines])
-print '</pre>'
-print '</html>'
+		print x, y, level,
+
+# print '<html>'
+# print '<meta charset="utf-8">'
+# print '<pre style="font-size: 2pt; ">'
+# print '\n'.join([''.join(i) for i in lines])
+# print '</pre>'
+# print '</html>'
