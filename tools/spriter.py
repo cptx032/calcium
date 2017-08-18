@@ -47,7 +47,7 @@ for x in range(image.size[0]):
 
 		# lines[y][x] = levels[level] * 2
 
-		print x, y, level,
+		print ', '.join([str(i) for i in [x, y, level]]) + ',',
 
 # print '<html>'
 # print '<meta charset="utf-8">'
