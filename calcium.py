@@ -103,7 +103,8 @@ if __name__ == '__main__':
 	world.add(block)
 	world.add(sprite)
 
-	world.add(arcade.AABB(32,calcium.height-32, 32, 32))
+	obstacle = arcade.AABBSprite(32,calcium.height-32, 32, 32, animations={'asd': [ground_pixels,]})
+	world.add(obstacle)
 
 	grounds = []
 	for i in range(0, calcium.width, 16):
@@ -128,6 +129,7 @@ if __name__ == '__main__':
 
 		calcium.clear()
 		calcium.plot(sprite)
+		calcium.plot(obstacle)
 
 		for i in grounds:
 			calcium.plot(i)
