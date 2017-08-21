@@ -46,8 +46,8 @@ class AABB(object):
 	@staticmethod
 	def point_inside(xy, aabb):
 		x, y = xy
-		inx = x <= (aabb.x + aabb.width) and x >= aabb.x
-		iny = y <= (aabb.y + aabb.height) and y >= aabb.y
+		inx = x < (aabb.x + aabb.width) and x > aabb.x
+		iny = y < (aabb.y + aabb.height) and y > aabb.y
 		return inx and iny
 
 	def clone(self):
@@ -79,23 +79,25 @@ class AABBSprite(AABB, calcium.CalciumSprite):
 			return
 
 		# verifying if is touching some other sprite
+		dest = self.clone()
+		dest.x += value
+
 		touching = False
 		touch_sprite = None
 		for sprite in self.world.aabbs:
 			if sprite != self:
 				if value > 0:
-					touching = self.t_right(sprite)
+					touching = dest.t_right(sprite)
 					if touching:
 						touch_sprite = sprite
 						break
 				elif value < 0:
-					touching = self.t_left(sprite)
+					touching = dest.t_left(sprite)
 					if touching:
 						touch_sprite = sprite
 						break
 
 		if touching:
-			print 'here'
 			# adjusting the position to limit
 			if value > 0:
 				self.x = touch_sprite.x - self.width
@@ -109,17 +111,19 @@ class AABBSprite(AABB, calcium.CalciumSprite):
 			return
 
 		# verifying if is touching some other sprite
+		dest = self.clone()
+		dest.y += value
 		touching = False
 		touch_sprite = None
 		for sprite in self.world.aabbs:
 			if sprite != self:
 				if value > 0:
-					touching = self.t_down(sprite)
+					touching = dest.t_down(sprite)
 					if touching:
 						touch_sprite = sprite
 						break
 				elif value < 0:
-					touching = self.t_up(sprite)
+					touching = dest.t_up(sprite)
 					if touching:
 						touch_sprite = sprite
 						break

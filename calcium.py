@@ -103,6 +103,8 @@ if __name__ == '__main__':
 	world.add(block)
 	world.add(sprite)
 
+	world.add(arcade.AABB(32,calcium.height-32, 32, 32))
+
 	grounds = []
 	for i in range(0, calcium.width, 16):
 		grounds.append(CalciumSprite(i, calcium.height-16, animations={'1': [ground_pixels,]}))
@@ -125,7 +127,6 @@ if __name__ == '__main__':
 		top.after(1000 / 60, _loop)
 
 		calcium.clear()
-		calcium.set_pixel(0,0,0)
 		calcium.plot(sprite)
 
 		for i in grounds:
