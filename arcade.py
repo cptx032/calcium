@@ -54,14 +54,6 @@ class AABB(object):
 		return AABB(self.x, self.y, self.width, self.height)
 
 
-class ArcadeWorld(object):
-	def __init__(self):
-		self.aabbs = []
-
-	def add(self, aabb):
-		self.aabbs.append(aabb)
-		aabb.world = self
-
 class AABBSprite(AABB, calcium.CalciumSprite):
 	def __init__(
 			self, x, y,
@@ -84,7 +76,7 @@ class AABBSprite(AABB, calcium.CalciumSprite):
 
 		touching = False
 		touch_sprite = None
-		for sprite in self.world.aabbs:
+		for sprite in self.world.get_aabb_sprites():
 			if sprite != self:
 				if value > 0:
 					touching = dest.t_right(sprite)
@@ -115,7 +107,7 @@ class AABBSprite(AABB, calcium.CalciumSprite):
 		dest.y += value
 		touching = False
 		touch_sprite = None
-		for sprite in self.world.aabbs:
+		for sprite in self.world.get_aabb_sprites():
 			if sprite != self:
 				if value > 0:
 					touching = dest.t_down(sprite)
@@ -136,3 +128,34 @@ class AABBSprite(AABB, calcium.CalciumSprite):
 				self.y = touch_sprite.y + touch_sprite.height
 		else:
 			self.y += value
+
+
+class ArcadePhysicsAABB(AABBSprite):
+	def __init__(self, *args, **kwargs):
+		self.vel_x = kwargs.pop('vel_x', 0)
+		self.vel_y = kwargs.pop('vel_y', 0)
+		AABBSprite.__init__(self, *args, **kwargs)
+
+	def update(self):
+		self.inc_x(self.vel_x)
+		self.inc_y(self.vel_y)
+
+
+class ArcadeWorld(object):
+	def __init__(self):
+		self.aabbs = []
+
+	def add(self, aabb):
+		self.aabbs.append(aabb)
+		aabb.world = self
+
+	def draw(self, calcium):
+		for sprite in self.aabbs:
+			if getattr(sprite, 'update', False):
+				sprite.update()
+
+			if getattr(sprite, 'get_pixels', False):
+				calcium.plot(sprite)
+
+	def get_aabb_sprites(self):
+		return [i for i in self.aabbs if isinstance(i, AABB)]

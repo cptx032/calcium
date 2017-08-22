@@ -98,17 +98,21 @@ if __name__ == '__main__':
 	calcium = CalciumScreen(128, 64)
 	world = arcade.ArcadeWorld()
 
-	sprite = arcade.AABBSprite(0, 0, 16, 16, animations={'running': [frame,]})
+	sprite = arcade.ArcadePhysicsAABB(0, 0, 16, 16, animations={'running': [frame,]})
+	sprite.vel_y = 1
+	sprite.vel_x = 1
 	block = arcade.AABB(0, calcium.height-16, calcium.width, 16)
 	world.add(block)
 	world.add(sprite)
 
-	obstacle = arcade.AABBSprite(32,calcium.height-32, 32, 32, animations={'asd': [ground_pixels,]})
+	obstacle = arcade.AABBSprite(32,calcium.height-32, 16, 16, animations={'asd': [ground_pixels,]})
 	world.add(obstacle)
 
 	grounds = []
 	for i in range(0, calcium.width, 16):
-		grounds.append(CalciumSprite(i, calcium.height-16, animations={'1': [ground_pixels,]}))
+		ground = CalciumSprite(i, calcium.height-16, animations={'1': [ground_pixels,]})
+		grounds.append(ground)
+		world.add(ground)
 
 	top = tk.Tk()
 	top.bind('<Escape>', lambda evt: top.destroy(), '+')
@@ -120,7 +124,6 @@ if __name__ == '__main__':
 	top.bind('<Right>', _right, '+')
 
 	def _loop():
-		sprite.inc_y(1)
 		if sprite.x >= calcium.width:
 			sprite.x = 0
 
@@ -128,10 +131,6 @@ if __name__ == '__main__':
 		top.after(1000 / 60, _loop)
 
 		calcium.clear()
-		calcium.plot(sprite)
-		calcium.plot(obstacle)
-
-		for i in grounds:
-			calcium.plot(i)
+		world.draw(calcium)
 	_loop()
 	top.mainloop()
