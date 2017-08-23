@@ -1,4 +1,6 @@
 # coding: utf-8
+# spriter image variable_name
+
 import sys
 from PIL import Image
 
@@ -13,8 +15,8 @@ for x in range(image.size[0]):
         if len(color_components) == 4:
             a = color_components[-1]
 
-        gray = int(0.299*r + 0.587*g + 0.114*b)
-        # gray = (r + g + b) / 3
+        # gray = int(0.299*r + 0.587*g + 0.114*b)
+        gray = (r + g + b) / 3
 
         if a == 0:
             continue
@@ -26,7 +28,7 @@ for x in range(image.size[0]):
         # lines[y][x] = level
         pixels.extend([x, y, level])
 
-print pixels
+print sys.argv[2], '=', pixels
 # print '<html>'
 # print '<meta charset="utf-8">'
 # print '<pre style="font-size: 2pt; ">'
