@@ -27,6 +27,21 @@ class CalciumSprite(object):
     def clone(self):
         return copy.deepcopy(self)
 
+    def invert_colors(self):
+        pixels = self.get_pixels()
+        for i in range(0, len(pixels), 3):
+            pixels[i + 2] = 3 - pixels[i + 2]
+
+    def dark(self, level=1):
+        pixels = self.get_pixels()
+        for i in range(0, len(pixels), 3):
+            pixels[i + 2] = max(0, pixels[i + 2] - level)
+
+    def light(self, level=1):
+        pixels = self.get_pixels()
+        for i in range(0, len(pixels), 3):
+            pixels[i + 2] = min(pixels[i + 2] + level, 3)
+
 
 class CalciumScreen(object):
     LEVELS = ['█', '▓', '▒', '░']
