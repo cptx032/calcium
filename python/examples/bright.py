@@ -4,26 +4,24 @@ import sys
 sys.path.extend(['..', '.'])
 import calcium
 import arcade
+import window
 
-tk = calcium.import_tkinter()
-top = tk.Tk()
-top.bind('<Escape>', lambda evt: top.destroy(), '+')
-label = tk.Label(top, font=('arial', 2))
-label.pack()
+class Bright(window.CalciumWindow):
+	def __init__(self, *args, **kwargs):
+		window.CalciumWindow.__init__(self, *args, **kwargs)
+		self.sprite_1 = calcium.CalciumSprite(
+			32, 32, animations={'run': [[0, 0, 0],]})
+		self.sprite_2 = self.sprite_1.clone()
+		self.sprite_2.animations['run'] = [[0,0,2],]
+		self.sprite_2.x += 1
+		self.add(self.sprite_1)
+		self.add(self.sprite_2)
 
-screen = calcium.CalciumScreen(64)
-sprite_1 = calcium.CalciumSprite(32, 32, animations={'run': [[0, 0, 0],]})
-sprite_2 = sprite_1.clone()
-sprite_2.animations['run'] = [[0,0,2],]
-sprite_2.x += 1
-world = arcade.ArcadeWorld()
-world.add(sprite_1)
-world.add(sprite_2)
+	def run(self):
+		self.sprite_1.x += 0.1
+		self.clear()
+		self.draw()
 
-def _loop():
-	screen.clear()
-	world.draw(screen)
-	label['text'] = str(screen)
-	top.after(int(1000 / 60), _loop)
-_loop()
+top = Bright(64)
+top.enable_escape()
 top.mainloop()

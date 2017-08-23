@@ -1,8 +1,9 @@
 import sys
 sys.path.extend(['..', '.'])
 import arcade
-from calcium import CalciumScreen, CalciumSprite, import_tkinter
-tk = import_tkinter()
+from calcium import CalciumScreen, CalciumSprite
+import window
+tk = window.import_tkinter()
 
 frame = [0, 7, 0, 1, 8, 0, 1, 10, 0, 1, 11, 0, 2, 7, 0,
 	2, 8, 0, 2, 10, 0, 2, 11, 3, 2, 12, 0, 2, 14, 0, 2, 15,
