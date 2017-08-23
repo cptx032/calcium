@@ -23,7 +23,7 @@ tk = import_tkinter()
 class CalciumWindow(tk.Tk):
     """Represent a complete Calcium Screen made in Tkinter."""
 
-    def __init__(self, width, height=None, fps=60):
+    def __init__(self, width, height=None, fps=60, mouse_support=False):
         u"""
         Create a Tkinter window instance.
 
@@ -39,9 +39,29 @@ class CalciumWindow(tk.Tk):
             border=0, highlightthickness=0)
         self.__label.grid()
 
+        self.mouse_x = 0
+        self.mouse_y = 0
+
+        if mouse_support:
+            self.enable_mouse_position()
+
+    def enable_mouse_position(self):
+        self.bind('<Motion>', self.__store_mouse_coords, '+')
+        self.bind('<Button-1>', self.__store_mouse_coords, '+')
+
+    def __store_mouse_coords(self, evt):
+        self.mouse_x = (self.screen.width * evt.x) / self.get_real_width()
+        self.mouse_y = (self.screen.height * evt.y) / self.get_real_height()
+
     def add(self, sprite):
         """The same that world.add."""
         self.world.add(sprite)
+
+    def get_real_width(self):
+        return self.__label.winfo_width()
+
+    def get_real_height(self):
+        return self.__label.winfo_height()
 
     def clear(self):
         self.screen.clear()
