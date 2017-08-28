@@ -62,8 +62,17 @@ class CalciumScreen(object):
                 line.append(CalciumScreen.LEVELS[self.clear_color])
             self.lines.append(line)
 
+    def get_string(self):
+        r = ''
+        for i, line in enumerate(self.lines):
+            for c in line:
+                r += c + c
+            if i != self.height - 1:
+                r += '\n'
+        return r
+
     def __repr__(self):
-        return '\n'.join([''.join([c + c for c in line]) for line in self.lines])
+        return self.get_string()
 
     def set_pixel(self, x, y, level):
         if x < 0 or x >= self.width:

@@ -68,7 +68,7 @@ class CalciumWindow(tk.Tk):
 
     def draw(self):
         self.world.draw(self.screen)
-        self.__label['text'] = str(self.screen)
+        self.__label['text'] = self.screen.get_string()
 
     def run(self, func):
         u"""Run method is called every frame.
