@@ -45,6 +45,12 @@ class CalciumWindow(tk.Tk):
         if mouse_support:
             self.enable_mouse_position()
 
+    def get_font(self):
+        return self.__label['font']
+
+    def set_font(self, font):
+        self.__label['font'] = font
+
     def enable_mouse_position(self):
         self.bind('<Motion>', self.__store_mouse_coords, '+')
         self.bind('<Button-1>', self.__store_mouse_coords, '+')

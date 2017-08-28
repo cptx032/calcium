@@ -21,9 +21,7 @@ for x in range(image.size[0]):
         if a == 0:
             continue
 
-        level = int((4*gray) / 256)
-        if a == 0:
-            continue
+        level = int((4 * gray) / 256)
 
         # lines[y][x] = level
         pixels.extend([x, y, level])

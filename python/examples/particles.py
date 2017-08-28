@@ -1,11 +1,11 @@
 # coding: utf-8
 
 import sys
+from random import randint
 sys.path.extend(['..', '.'])
 import calcium
 import arcade
 import window
-from random import randint
 
 
 class Particle(arcade.ArcadePhysicsAABB):
@@ -43,19 +43,31 @@ class ParticleWindow(window.CalciumWindow):
     MAX_SPRITES = 50
 
     def __init__(self, width, height=None):
-        window.CalciumWindow.__init__(self, width, height, mouse_support=True)
+        self.times = 0
+        window.CalciumWindow.__init__(
+            self, width, height,
+            mouse_support=True, fps=60)
         self.sprites = []
         for i in range(ParticleWindow.MAX_SPRITES):
             x = randint(20, 44)
             y = randint(40, 60)
-            sprite = Particle(x, y, animations={'asd': [[0, 0, 0], ]}, window=self)
+            sprite = Particle(
+                x, y, animations={'asd': [[0, 0, 0], ]},
+                window=self)
             self.add(sprite)
+        self.after(1000, self.after_1)
+
+    def after_1(self):
+        print('{} fps'.format(self.times))
+        self.times = 0
+        self.after(1000, self.after_1)
 
     def run(self):
         self.clear()
         self.draw()
+        self.times += 1
 
-top = ParticleWindow(128, 64)
+top = ParticleWindow(64)
 top.title('Particles')
 top.enable_escape()
 top.mainloop()
