@@ -5,6 +5,10 @@ Images from http://www.hlevkin.com/default.html#articles
 
 ![cameraman.png](screenshots/cameraman.png) ![dollar.png](screenshots/dollar.png) ![girlface.png](screenshots/girlface.png) ![houses.png](screenshots/houses.png) ![lenna.png](screenshots/lenna.png) ![moon.png](screenshots/moon.png) ![particles.png](screenshots/particles.png) ![simple_arcade_physics.png](screenshots/simple_arcade_physics.png)
 
+#### monochrome.py
+In `tools/spriter.py` one pixel is created using two characters, in `tools/monochrome.py` four pixels are create using two characters.
+This is better to make terminal applications where normally we have only 80x24
+
 ## calcium.py
 #### CalciumScreen
 Represents the virtual ascii screen. It has the `get_string` method that returns the string/ascii representation of screen. You can use this method to "plot" the screen in any place you want. The `window` module is a implementation of calcium classes in tkinter/tk. The `clear_color` property controls the color used to clear the screen. Any color is a integer between 0 and 3 representing the level of color. The levels are the 4 characters: █, ▓, ▒, ░.
