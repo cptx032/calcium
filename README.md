@@ -8,6 +8,7 @@ Images from http://www.hlevkin.com/default.html#articles
 #### monochrome.py
 In `tools/spriter.py` one pixel is created using two characters, in `tools/monochrome.py` four pixels are create using two characters.
 This is better to make terminal applications where normally we have only 80x24
+![monochrome.png](screenshots/monochrome.png) 
 
 ## calcium.py
 #### CalciumScreen
