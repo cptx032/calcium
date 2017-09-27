@@ -30,21 +30,10 @@ class CalciumSprite(object):
     def invert_colors(self):
         pixels = self.get_pixels()
         for i in range(0, len(pixels), 3):
-            pixels[i + 2] = 3 - pixels[i + 2]
-
-    def dark(self, level=1):
-        pixels = self.get_pixels()
-        for i in range(0, len(pixels), 3):
-            pixels[i + 2] = max(0, pixels[i + 2] - level)
-
-    def light(self, level=1):
-        pixels = self.get_pixels()
-        for i in range(0, len(pixels), 3):
-            pixels[i + 2] = min(pixels[i + 2] + level, 3)
+            pixels[i + 2] = 1 - pixels[i + 2]
 
 
 class CalciumScreen(object):
-    # LEVELS = ['█', '▓', '▒', '░']
     FILLED = u'█'
     TOP = u'▀'
     BOTTOM = u'▄'
@@ -88,12 +77,12 @@ class CalciumScreen(object):
                     r += CalciumScreen.BOTTOM
             if y <= self.height:
                 r += u'\n'
-        return r.encode('utf-8')[:-1]
+        return r[:-1]
 
     def __repr__(self):
         return self.get_string()
 
-    def pixel(self, pixel, x, y):
+    def pixel(self, x, y, pixel):
         if x < 0 or x >= self.width:
             return
         if y < 0 or y >= self.height:
