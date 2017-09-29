@@ -14,7 +14,7 @@ class ImageViewApp(CalciumTerminal):
             0,
             0, {
                 'normal': [core.CalciumSprite.get_frame_from_image(
-                    'lenna.png')]
+                    sys.argv[1])]
             })
         CalciumTerminal.__init__(self, *args, **kwargs)
 
