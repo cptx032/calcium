@@ -45,6 +45,7 @@ class CalciumScreen(object):
         self.height = height or width
         assert (self.height % 2) == 0
         self.lines = []
+        self.invert = False
         self.clear()
 
     def clear(self):
@@ -54,6 +55,8 @@ class CalciumScreen(object):
         self.__fill(1)
 
     def __fill(self, value):
+        if self.invert:
+            value = 1 - value
         self.lines = []
         for li in range(self.height):
             line = []
@@ -83,11 +86,13 @@ class CalciumScreen(object):
         return self.get_string()
 
     def pixel(self, x, y, pixel):
+        if self.invert:
+            pixel = 1 - pixel
         if x < 0 or x >= self.width:
             return
         if y < 0 or y >= self.height:
             return
-        self.lines[y][x] = pixel
+        self.lines[int(y)][int(x)] = pixel
 
     def plot(self, sprite):
         pixels = sprite.get_pixels()
