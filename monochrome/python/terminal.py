@@ -32,6 +32,7 @@ def anykey():
         ch = os.read(sys.stdin.fileno(), 1)
     return ch_set
 
+
 @atexit.register
 def term_anykey():
     global old_settings

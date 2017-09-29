@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import copy
+import utils
 
 
 class CalciumSprite(object):
@@ -31,6 +32,20 @@ class CalciumSprite(object):
         pixels = self.get_pixels()
         for i in range(0, len(pixels), 3):
             pixels[i + 2] = 1 - pixels[i + 2]
+
+    @staticmethod
+    def get_frame_from_image(image_path):
+        from PIL import Image
+        image = Image.open(image_path)
+        frame = []
+        for y in range(image.size[1]):
+            for x in range(image.size[0]):
+                frame.extend([x, y, utils.get_gray(image, x, y)])
+        return frame
+
+    def add_frame_from_image(self, image_path):
+        self.animations[self.animation_key].append(
+            self.get_frame_from_image(image_path))
 
 
 class CalciumScreen(object):
