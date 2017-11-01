@@ -3,9 +3,13 @@ import sys
 sys.path.extend(['.', '..'])
 from terminal import CalciumTerminal
 import core
+from PIL import Image
 
 SCREEN_WIDTH = 32
 SCREEN_HEIGHT = 32
+
+image = Image.open(sys.argv[1])
+SCREEN_WIDTH, SCREEN_HEIGHT = image.size
 
 
 class ImageViewApp(CalciumTerminal):
@@ -26,4 +30,4 @@ class ImageViewApp(CalciumTerminal):
 
 
 if __name__ == '__main__':
-    ImageViewApp(32).mainloop()
+    ImageViewApp(SCREEN_WIDTH, SCREEN_HEIGHT).mainloop()

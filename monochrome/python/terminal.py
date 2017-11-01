@@ -54,6 +54,19 @@ class CalciumTerminal:
         self.__run = True
         init_anykey()
 
+        # clearing the terminal
+        sys.stdout.write('\033[2J')
+        self.hide_cursor()
+
+    def hide_cursor(self):
+        sys.stdout.write('\033[?25l')
+
+    def __del__(self):
+        self.show_cursor()
+
+    def show_cursor(self):
+        sys.stdout.write('\033[?25h')
+
     def quit(self):
         self.__run = False
 
@@ -66,7 +79,8 @@ class CalciumTerminal:
         raise NotImplemented
 
     def clear_terminal(self):
-        sys.stdout.write('\033[2J\033[1;1H')
+        # go to (0, 0) position
+        sys.stdout.write('\033[0;0H')
 
     def mainloop(self):
         while self.__run:
