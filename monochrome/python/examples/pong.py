@@ -3,9 +3,10 @@ import sys
 sys.path.extend(['.', '..'])
 from terminal import CalciumTerminal
 import core
+from get_terminal_size import get_terminal_size as GTS
 
-SCREEN_WIDTH = 32
-SCREEN_HEIGHT = 32
+SCREEN_WIDTH, SCREEN_HEIGHT = GTS()
+SCREEN_HEIGHT *= 2
 
 
 class PongBall(core.CalciumSprite):
@@ -36,15 +37,25 @@ class PongBall(core.CalciumSprite):
 
 class PongApp(CalciumTerminal):
     def __init__(self, *args, **kwargs):
-        self.ball = PongBall(0, 0, {'normal': [[0, 0, 0]]})
+        self.ball = PongBall(0, 0, {'normal': [[0, 0, 1]]}, velx=3, vely=2)
         CalciumTerminal.__init__(self, *args, **kwargs)
+        self.set_fg_color(0xec,0xf0, 0xf1)
+        self.set_bg_color(0x2e, 0xcc, 0x71)
+        self.screen.clear()
+        self.bind(
+            CalciumTerminal.ARROW_RIGHT_KEY, self.__change_bg_color, '+')
+        self.bind('q', self.quit, '+')
+
+    def __change_bg_color(self):
+        self.set_bg_color(255, 0, 0)
 
     def run(self):
         self.ball.update()
-        self.screen.fill()
+        self.screen.clear()
         self.screen.plot(self.ball)
-        self.clear_terminal()
+        self.go_to_0_0()
         self.draw()
 
 if __name__ == '__main__':
-    PongApp(32, 32).mainloop()
+    PongApp(
+        SCREEN_WIDTH, SCREEN_HEIGHT).mainloop()

@@ -41,8 +41,12 @@ def term_anykey():
 
 
 class CalciumTerminal:
-    Q_KEY = 113
-    ESCAPE_KEY = 27
+    Q_KEY = (113, )
+    ESCAPE_KEY = (27, )
+    ARROW_UP_KEY = (27, 91, 65)
+    ARROW_DOWN_KEY = (27, 91, 66)
+    ARROW_RIGHT_KEY = (27, 91, 67)
+    ARROW_LEFT_KEY = (27, 91, 68)
 
     def __init__(self, width=None, height=None, terminal_size=False, fps=60):
         if terminal_size:
@@ -50,19 +54,32 @@ class CalciumTerminal:
             height *= 2
         self.screen = core.CalciumScreen(width, height)
         self.fps = fps
-        self.quit_keys = [CalciumTerminal.Q_KEY, CalciumTerminal.ESCAPE_KEY]
         self.__run = True
+        self.function_map = dict()
         init_anykey()
 
         # clearing the terminal
-        sys.stdout.write('\033[2J')
+        self.clear_terminal()
         self.hide_cursor()
+        self.bind(CalciumTerminal.ESCAPE_KEY, self.quit)
+        atexit.register(self.__restore_terminal)
+
+    def __restore_terminal(self):
+        sys.stdout.write('\033[0m')
+        self.show_cursor()
+
+    def set_fg_color(self, r, g, b):
+        sys.stdout.write(
+            '\033[38;2;{};{};{}m'.format(
+                r, g, b))
+
+    def set_bg_color(self, r, g, b):
+        sys.stdout.write(
+            '\033[48;2;{};{};{}m'.format(
+                r, g, b))
 
     def hide_cursor(self):
         sys.stdout.write('\033[?25l')
-
-    def __del__(self):
-        self.show_cursor()
 
     def show_cursor(self):
         sys.stdout.write('\033[?25h')
@@ -79,6 +96,9 @@ class CalciumTerminal:
         raise NotImplemented
 
     def clear_terminal(self):
+        sys.stdout.write('\033[2J')
+
+    def go_to_0_0(self):
         # go to (0, 0) position
         sys.stdout.write('\033[0;0H')
 
@@ -86,10 +106,22 @@ class CalciumTerminal:
         while self.__run:
             key = anykey()
             if key:
-                for i in self.quit_keys:
-                    if key == [i]:
-                        self.__run = False
-                        break
+                for func in self.function_map.get(tuple(key), []):
+                    func()
             else:
                 self.run()
                 time.sleep(1.0 / self.fps)
+
+    def bind(self, key, func, op=None):
+        u"""Bind a function to be called when pressing a key."""
+        assert op in (None, '+', '-'), ValueError
+        if type(key) in (str, unicode):
+            key = (ord(key), )
+        if not self.function_map.get(key):
+            self.function_map[key] = list()
+        if not op:
+            self.function_map[key] = list()
+        list_operation = self.function_map[key].append
+        if op == '-':
+            list_operation = self.function_map[key].remove
+        list_operation(func)
