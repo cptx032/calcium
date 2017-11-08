@@ -20,6 +20,6 @@ def get_gray(image, x, y):
         gray = 0
 
     if a == 0:
-        gray = 0
+        return None
 
     return gray
