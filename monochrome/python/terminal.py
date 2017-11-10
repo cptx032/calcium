@@ -115,7 +115,7 @@ class CalciumTerminal:
     def bind(self, key, func, op=None):
         u"""Bind a function to be called when pressing a key."""
         assert op in (None, '+', '-'), ValueError
-        if type(key) in (str, unicode):
+        if type(key) != tuple:
             key = (ord(key), )
         if not self.function_map.get(key):
             self.function_map[key] = list()

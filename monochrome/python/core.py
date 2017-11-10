@@ -28,11 +28,6 @@ class CalciumSprite(object):
     def clone(self):
         return copy.deepcopy(self)
 
-    def invert_colors(self):
-        pixels = self.get_pixels()
-        for i in range(0, len(pixels), 3):
-            pixels[i + 2] = 1 - pixels[i + 2]
-
     @staticmethod
     def get_frame_from_image(image_path):
         from PIL import Image
@@ -60,7 +55,6 @@ class CalciumScreen(object):
         self.height = height or width
         assert (self.height % 2) == 0
         self.lines = []
-        self.invert = False
         self.clear()
 
     def clear(self):
@@ -70,8 +64,6 @@ class CalciumScreen(object):
         self.__fill(1)
 
     def __fill(self, value):
-        if self.invert:
-            value = 1 - value
         self.lines = []
         for li in range(self.height):
             line = []
@@ -101,8 +93,6 @@ class CalciumScreen(object):
         return self.get_string()
 
     def pixel(self, x, y, pixel):
-        if self.invert:
-            pixel = 1 - pixel
         if x < 0 or x >= self.width:
             return
         if y < 0 or y >= self.height:
