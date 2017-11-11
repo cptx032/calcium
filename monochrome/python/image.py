@@ -26,6 +26,18 @@ class ImageSprite(core.CalciumSprite):
         return ImageSprite.get_frame_from_image(image)
 
     @staticmethod
+    def get_frames_from_sheet(image_path, width, height):
+        frames = list()
+        image = Image.open(image_path)
+        frame_width = image.size[0] / width
+        frame_height = image.size[1] / height
+        for y in range(0, image.size[1], frame_height):
+            for x in range(0, image.size[0], frame_width):
+                frame = image.crop((x, y, x + frame_width, y + frame_height))
+                frames.append(ImageSprite.get_frame_from_image(frame))
+        return frames
+
+    @staticmethod
     def get_frames_from_gif(gif_path):
         image = Image.open(gif_path)
         palette = image.getpalette()
