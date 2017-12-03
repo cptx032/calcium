@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import copy
-import utils
+import calcium.utils as utils
 
 
 class CalciumSprite(object):

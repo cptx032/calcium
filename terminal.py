@@ -4,7 +4,7 @@ import os
 import sys
 import termios
 import time
-from get_terminal_size import get_terminal_size
+from calcium.get_terminal_size import get_terminal_size
 import core
 
 old_settings = None

@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import core
-import utils
+import calcium.core as core
+import calcium.utils as utils
 from PIL import Image
 
 
