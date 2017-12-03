@@ -5,12 +5,53 @@ import utils
 
 
 class CalciumSprite(object):
-    def __init__(self, x, y, animations, frame_index=0, animation_key=None):
+    def __init__(
+            self, x, y,
+            animations, frame_index=0,
+            animation_key=None,
+            size=None, visible=True):
         self.x = x
         self.y = y
+        self.visible = visible
         self.animations = animations
         self.animation_key = animation_key or list(animations.keys())[0]
         self.frame_index = frame_index
+        self.size = size
+        if not size:
+            self.size = CalciumSprite.get_size_from_pixels(
+                self.get_pixels())
+
+    def is_touching(self, sprite):
+        if self.x > (sprite.x + sprite.size[0]):
+            return False
+        if sprite.x > (self.x + self.size[0]):
+            return False
+        if self.y > (sprite.y + sprite.size[1]):
+            return False
+        if sprite.y > (self.y + self.size[1]):
+            return False
+        return True
+
+    @staticmethod
+    def get_size_from_pixels(pixels):
+        width = 0
+        height = 0
+        for i in range(0, len(pixels), 3):
+            x = pixels[i]
+            y = pixels[i + 1]
+            if x > width:
+                width = x
+            if y > height:
+                height = y
+        # cause coordenates starts in (0, 0) we must
+        # sum 1
+        return (width + 1, height + 1)
+
+    def align(self, anchor, x, y):
+        offsetx = -self.size[0] * anchor[0]
+        offsety = -self.size[1] * anchor[1]
+        self.x = x + offsetx
+        self.y = y + offsety
 
     def get_pixels(self):
         return self.animations.get(self.animation_key)[self.frame_index]
@@ -100,6 +141,8 @@ class CalciumScreen(object):
         self.lines[int(y)][int(x)] = pixel
 
     def plot(self, sprite):
+        if not sprite.visible:
+            return
         pixels = sprite.get_pixels()
         for i in range(0, len(pixels), 3):
             self.pixel(

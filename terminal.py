@@ -41,8 +41,8 @@ def term_anykey():
 
 
 class CalciumTerminal:
-    Q_KEY = (113, )
     ESCAPE_KEY = (27, )
+    ENTER_KEY = (10, )
     ARROW_UP_KEY = (27, 91, 65)
     ARROW_DOWN_KEY = (27, 91, 66)
     ARROW_RIGHT_KEY = (27, 91, 67)

@@ -29,8 +29,8 @@ class ImageSprite(core.CalciumSprite):
     def get_frames_from_sheet(image_path, width, height):
         frames = list()
         image = Image.open(image_path)
-        frame_width = image.size[0] / width
-        frame_height = image.size[1] / height
+        frame_width = int(image.size[0] / width)
+        frame_height = int(image.size[1] / height)
         for y in range(0, image.size[1], frame_height):
             for x in range(0, image.size[0], frame_width):
                 frame = image.crop((x, y, x + frame_width, y + frame_height))

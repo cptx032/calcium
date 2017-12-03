@@ -5,9 +5,6 @@ from terminal import CalciumTerminal
 import core
 from PIL import Image
 
-SCREEN_WIDTH = 32
-SCREEN_HEIGHT = 32
-
 image = Image.open(sys.argv[1])
 SCREEN_WIDTH, SCREEN_HEIGHT = image.size
 
@@ -21,11 +18,12 @@ class ImageViewApp(CalciumTerminal):
                     sys.argv[1])]
             })
         CalciumTerminal.__init__(self, *args, **kwargs)
+        self.bind('q', self.quit, '+')
 
     def run(self):
-        self.screen.fill()
+        self.screen.clear()
         self.screen.plot(self.image)
-        self.clear_terminal()
+        self.go_to_0_0()
         self.draw()
 
 
