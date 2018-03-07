@@ -64,6 +64,10 @@ class CalciumTerminal:
         self.bind(CalciumTerminal.ESCAPE_KEY, self.quit)
         atexit.register(self.__restore_terminal)
 
+        self.last_fps = None
+        self.__frame_counter = 0
+        self.__fps_start_time = time.time()
+
     def __restore_terminal(self):
         sys.stdout.write('\033[0m')
         self.show_cursor()
@@ -77,6 +81,15 @@ class CalciumTerminal:
         sys.stdout.write(
             '\033[48;2;{};{};{}m'.format(
                 r, g, b))
+
+    def set_fg_color_rgb(self, color):
+        self.set_fg_color(*self.get_rgb_tuple_from_str(color))
+
+    def set_bg_color_rgb(self, color):
+        self.set_bg_color(*self.get_rgb_tuple_from_str(color))
+
+    def get_rgb_tuple_from_str(self, color):
+        return [int(color.replace('#', '')[i:i + 2], 16) for i in range(0, 6, 2)]
 
     def hide_cursor(self):
         sys.stdout.write('\033[?25l')
@@ -104,13 +117,23 @@ class CalciumTerminal:
 
     def mainloop(self):
         while self.__run:
+            start = time.time()
             key = anykey()
             if key:
                 for func in self.function_map.get(tuple(key), []):
                     func()
-            else:
-                self.run()
-                time.sleep(1.0 / self.fps)
+            self.run()
+            elapsed_time = time.time() - start
+            sleep_time = (1.0 / self.fps) - elapsed_time
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+
+            # calculating how many frames per seconds
+            self.__frame_counter += 1
+            if (time.time() - self.__fps_start_time) >= 1:
+                self.last_fps = self.__frame_counter
+                self.__frame_counter = 0
+                self.__fps_start_time = time.time()
 
     def bind(self, key, func, op=None):
         u"""Bind a function to be called when pressing a key."""

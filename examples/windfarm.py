@@ -2,7 +2,6 @@
 
 import sys
 sys.path.extend(['../..', '..', '.'])
-from get_terminal_size import get_terminal_size as GTS
 import terminal
 import image
 import core
@@ -32,6 +31,6 @@ class WindFarmApp(terminal.CalciumTerminal):
 
 
 if __name__ == '__main__':
-    w, h = GTS()
-    h *= 2
-    WindFarmApp(w, h).mainloop()
+    app = WindFarmApp(terminal_size=True, fps=20)
+    app.mainloop()
+    print(app.last_fps)

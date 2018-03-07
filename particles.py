@@ -80,7 +80,7 @@ if __name__ == '__main__':
             for i in range(20):
                 self.colors.append([ri(50, 100), ri(0, 20), ri(0, 20)])
             self.screen.clear()
-            self.bind(CalciumTerminal.Q_KEY, self.quit, '+')
+            self.bind('q', self.quit, '+')
             width = 20
             self.particle_gen = ParticleGenerator(
                 (self.screen.width / 2) - (width / 2),
