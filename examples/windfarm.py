@@ -5,6 +5,7 @@ sys.path.extend(['../..', '..', '.'])
 import terminal
 import image
 import core
+import draw
 
 
 class WindFarmApp(terminal.CalciumTerminal):
@@ -13,6 +14,9 @@ class WindFarmApp(terminal.CalciumTerminal):
         self.scene = core.CalciumSprite(
             0, 0,
             dict(normal=image.ImageSprite.get_frames_from_gif('eolic.gif')))
+        self.line = core.CalciumSprite(0, 0, {
+            'normal': [draw.line(0, 0, 80, 48, color=0)]
+        })
         self.bind('q', self.quit, '+')
 
         self.set_bg_color(0xC9, 0xB9, 0x82)
@@ -26,6 +30,7 @@ class WindFarmApp(terminal.CalciumTerminal):
             self.counter = 0
         self.screen.clear()
         self.screen.plot(self.scene)
+        self.screen.plot(self.line)
         self.go_to_0_0()
         self.draw()
 
