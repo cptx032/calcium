@@ -40,7 +40,7 @@ def term_anykey():
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 
-class CalciumTerminal:
+class CalciumTerminal(core.GenericWindow):
     ESCAPE_KEY = (27, )
     ENTER_KEY = (10, )
     ARROW_UP_KEY = (27, 91, 65)
@@ -49,13 +49,11 @@ class CalciumTerminal:
     ARROW_LEFT_KEY = (27, 91, 68)
 
     def __init__(self, width=None, height=None, terminal_size=False, fps=60):
+        super(CalciumTerminal, self).__init__(fps=fps)
         if terminal_size:
             width, height = get_terminal_size()
             height *= 2
         self.screen = core.CalciumScreen(width, height)
-        self.fps = fps
-        self.__run = True
-        self.function_map = dict()
         init_anykey()
 
         # clearing the terminal
@@ -63,10 +61,6 @@ class CalciumTerminal:
         self.hide_cursor()
         self.bind(CalciumTerminal.ESCAPE_KEY, self.quit)
         atexit.register(self.__restore_terminal)
-
-        self.last_fps = None
-        self.__frame_counter = 0
-        self.__fps_start_time = time.time()
 
     def __restore_terminal(self):
         sys.stdout.write('\033[0m')
@@ -97,17 +91,11 @@ class CalciumTerminal:
     def show_cursor(self):
         sys.stdout.write('\033[?25h')
 
-    def quit(self):
-        self.__run = False
-
     def draw(self):
         sys.stdout.write(self.screen.get_string())
         sys.stdout.flush()
 
-    def run(self):
-        u"""Function that is called every frame. Override it."""
-        raise NotImplemented
-
+    # fixme: change this function to "clear"
     def clear_terminal(self):
         sys.stdout.write('\033[2J')
 
@@ -115,36 +103,12 @@ class CalciumTerminal:
         # go to (0, 0) position
         sys.stdout.write('\033[0;0H')
 
+    def process_input(self):
+        key = anykey()
+        if key:
+            for func in self.function_map.get(tuple(key), []):
+                func()
+
     def mainloop(self):
-        while self.__run:
-            start = time.time()
-            key = anykey()
-            if key:
-                for func in self.function_map.get(tuple(key), []):
-                    func()
-            self.run()
-            elapsed_time = time.time() - start
-            sleep_time = (1.0 / self.fps) - elapsed_time
-            if sleep_time > 0:
-                time.sleep(sleep_time)
-
-            # calculating how many frames per seconds
-            self.__frame_counter += 1
-            if (time.time() - self.__fps_start_time) >= 1:
-                self.last_fps = self.__frame_counter
-                self.__frame_counter = 0
-                self.__fps_start_time = time.time()
-
-    def bind(self, key, func, op=None):
-        u"""Bind a function to be called when pressing a key."""
-        assert op in (None, '+', '-'), ValueError
-        if type(key) != tuple:
-            key = (ord(key), )
-        if not self.function_map.get(key):
-            self.function_map[key] = list()
-        if not op:
-            self.function_map[key] = list()
-        list_operation = self.function_map[key].append
-        if op == '-':
-            list_operation = self.function_map[key].remove
-        list_operation(func)
+        while self.keep_running:
+            self.next_frame()

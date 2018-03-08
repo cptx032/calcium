@@ -1,6 +1,8 @@
 # coding: utf-8
 
 import copy
+import time
+
 import calcium.utils as utils
 
 
@@ -150,3 +152,71 @@ class CalciumScreen(object):
                 sprite.y + pixels[i + 1],
                 pixels[i + 2]
             )
+
+
+class GenericWindow(object):
+    def __init__(self, fps):
+        self.fps = fps
+        self.keep_running = True
+        self.function_map = dict()
+
+        self.last_fps = None
+        self.__frame_counter = 0
+        self.__fps_start_time = time.time()
+
+    def quit(self):
+        self.keep_running = False
+
+    def bind(self, key, func, op=None):
+        u"""Bind a function to be called when pressing a key."""
+        assert op in (None, '+', '-'), ValueError
+        if type(key) != tuple:
+            key = (ord(key), )
+        if not self.function_map.get(key):
+            self.function_map[key] = list()
+        if not op:
+            self.function_map[key] = list()
+        list_operation = self.function_map[key].append
+        if op == '-':
+            list_operation = self.function_map[key].remove
+        list_operation(func)
+
+    def next_frame(self):
+        start = time.time()
+        self.process_input()
+        self.run()
+        elapsed_time = time.time() - start
+        sleep_time = (1.0 / self.fps) - elapsed_time
+        if sleep_time > 0:
+            time.sleep(sleep_time)
+
+        # calculating how many frames per seconds
+        self.__frame_counter += 1
+        if (time.time() - self.__fps_start_time) >= 1:
+            self.last_fps = self.__frame_counter
+            self.__frame_counter = 0
+            self.__fps_start_time = time.time()
+
+    def process_input(self):
+        u"""Function used to receive and process events."""
+        raise NotImplemented
+
+    def run(self):
+        u"""Function that is called every frame. Override it."""
+        raise NotImplemented
+
+    def draw(self):
+        u"""Function the plot the screen string in window."""
+        raise NotImplemented
+
+    def clear(self):
+        u"""Function used to clear the implemented window."""
+        raise NotImplemented
+
+    def set_fg_color(self):
+        u"""Function used to change the font color."""
+        raise NotImplemented
+
+    def set_bg_color_rgb(self):
+        u"""Function used to change the background color."""
+        raise NotImplemented

@@ -9,7 +9,7 @@ import core
 
 class WindFarmApp(terminal.CalciumTerminal):
     def __init__(self, *args, **kwargs):
-        terminal.CalciumTerminal.__init__(self, *args, **kwargs)
+        super(WindFarmApp, self).__init__(*args, **kwargs)
         self.scene = core.CalciumSprite(
             0, 0,
             dict(normal=image.ImageSprite.get_frames_from_gif('eolic.gif')))
@@ -31,6 +31,6 @@ class WindFarmApp(terminal.CalciumTerminal):
 
 
 if __name__ == '__main__':
-    app = WindFarmApp(terminal_size=True, fps=20)
+    app = WindFarmApp(terminal_size=True)
     app.mainloop()
     print(app.last_fps)
