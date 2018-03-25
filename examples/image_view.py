@@ -1,8 +1,8 @@
 # coding: utf-8
 import sys
 sys.path.extend(['.', '..'])
-from terminal import CalciumTerminal
-import core
+from calcium.terminal import CalciumTerminal
+import calcium.core as core
 from PIL import Image
 
 image = Image.open(sys.argv[1])

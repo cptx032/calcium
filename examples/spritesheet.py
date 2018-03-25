@@ -1,11 +1,12 @@
 # coding: utf-8
 
+import os
 import sys
-sys.path.extend(['../..', '..', '.'])
-from get_terminal_size import get_terminal_size as GTS
-import terminal
-import image
-import core
+sys.path.append('.')
+from calcium.get_terminal_size import get_terminal_size as GTS
+import calcium.terminal as terminal
+import calcium.image as image
+import calcium.core as core
 
 
 class SpriteSheetApp(terminal.CalciumTerminal):
@@ -15,7 +16,7 @@ class SpriteSheetApp(terminal.CalciumTerminal):
             10, self.screen.height-16,
             dict(
                 normal=image.ImageSprite.get_frames_from_sheet(
-                    'sheet.png', 6, 1)))
+                    os.path.join(os.path.dirname(sys.argv[0]), 'sheet.png'), 6, 1)))
         self.bind('q', self.quit, '+')
 
         self.set_bg_color(0xC9, 0xB9, 0x82)

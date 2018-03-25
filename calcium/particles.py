@@ -11,13 +11,12 @@ SCREEN_HEIGHT *= 2
 
 
 class Particle(core.CalciumSprite):
-    DEFAULT_LIFE_TIME = 50
 
     def __init__(self, *args, **kwargs):
         self.velx = kwargs.pop('velx', 1)
         self.vely = kwargs.pop('vely', 1.5)
         self.lifetime = kwargs.pop(
-            'lifetime', Particle.DEFAULT_LIFE_TIME)
+            'lifetime', ri(30, 80))
         self.life = 0
         core.CalciumSprite.__init__(self, *args, **kwargs)
         self.initial_pos = [self.x, self.y]
@@ -84,7 +83,7 @@ if __name__ == '__main__':
             width = 20
             self.particle_gen = ParticleGenerator(
                 (self.screen.width / 2) - (width / 2),
-                self.screen.height-5,
+                self.screen.height - 5,
                 width,
                 5)
             self.particle_gen.create_particles(500)
