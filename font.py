@@ -1,41 +1,35 @@
 from datetime import datetime
 
-from PIL import Image
-from PIL.ImageDraw import Draw
-from PIL.ImageFont import truetype
-
-from calcium.core import CalciumSprite
-from calcium.image import ImageSprite
 from calcium.terminal import CalciumTerminal
+from calcium.font import FontSprite
 
 
 class ClockApp(CalciumTerminal):
     def __init__(self, *args, **kwargs):
+        self.format = kwargs.pop('format', '%H:%M:%S')
         super(ClockApp, self).__init__(*args, **kwargs)
         self.bind('q', self.quit, '+')
-        self.font = truetype('verdana', 10)
+
+        # the following line works in my personal ubuntu but not in others
+        # ubuntus. the idea is use a free font to use as "official" calcium
+        # font
+        # self.font = truetype('arial', 10)
+
+        self.spt = FontSprite(10, 0, {'default': [[]]})
 
     def run(self):
-        now = datetime.now()
-        text = '{}:{}:{}'.format(
-            str(now.hour).zfill(2), str(now.minute).zfill(2),
-            str(now.second).zfill(2))
-        i = Image.new('1', (80, 48))
-        draw = Draw(i)
-        draw.text((0, 0), text, fill=(255,), font=self.font)
+        text = datetime.now().strftime(self.format)
 
-        frame = ImageSprite.get_frame_from_image(i)
-        sprite = CalciumSprite(0, 0, {
-            'normal': [frame]
-        })
-        sprite.align((0.5, 0.5), 40, 24)
+        self.spt.text = text
+        self.spt.align(
+            (0.5, 0.5), self.screen.width / 2.0, self.screen.height / 2.0)
         self.screen.clear()
-        self.screen.plot(sprite)
+        self.screen.plot(self.spt)
         self.go_to_0_0()
         self.draw()
 
 
 if __name__ == '__main__':
-    app = ClockApp(terminal_size=True, fps=1)
+    app = ClockApp(terminal_size=True, fps=5)
     app.mainloop()
     print(app.last_fps)
