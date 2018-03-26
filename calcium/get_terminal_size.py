@@ -17,6 +17,11 @@ def get_terminal_size():
         return __func()
 
 
+def get_terminal_size_in_pixels():
+    width, height = get_terminal_size()
+    return (width, height * 2)
+
+
 def _get_terminal_size():
     """ getTerminalSize()
      - get width and height of console

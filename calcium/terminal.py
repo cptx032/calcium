@@ -4,7 +4,7 @@ import os
 import sys
 import termios
 import time
-from calcium.get_terminal_size import get_terminal_size
+from calcium.get_terminal_size import get_terminal_size_in_pixels
 import calcium.core as core
 
 old_settings = None
@@ -50,9 +50,15 @@ class CalciumTerminal(core.GenericWindow):
 
     def __init__(self, width=None, height=None, terminal_size=False, fps=60):
         super(CalciumTerminal, self).__init__(fps=fps)
+        available_width, available_height = get_terminal_size_in_pixels()
         if terminal_size:
-            width, height = get_terminal_size()
-            height *= 2
+            width, height = available_width, available_height
+        else:
+            if width > available_width or (height and height > available_height):
+                raise ValueError(
+                    'The width/height must be less than or equal the available'
+                    ' width/height ({}, {})'.format(
+                        available_width, available_height))
         self.screen = core.CalciumScreen(width, height)
         init_anykey()
 
