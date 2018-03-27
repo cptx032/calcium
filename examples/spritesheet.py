@@ -1,12 +1,10 @@
-# coding: utf-8
-
 import os
 import sys
-sys.path.append('.')
+
 from calcium.get_terminal_size import get_terminal_size as GTS
-import calcium.terminal as terminal
-import calcium.image as image
-import calcium.core as core
+from calcium import terminal
+from calcium import image
+from calcium import core
 
 
 class SpriteSheetApp(terminal.CalciumTerminal):

@@ -1,5 +1,5 @@
-# coding: utf-8
-import core
+from calcium import core
+
 
 class AABB(object):
     def __init__(self, x, y, width, height):

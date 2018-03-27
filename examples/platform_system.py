@@ -1,12 +1,8 @@
-# coding: utf-8
-
-import sys
-sys.path.extend(['../..', '..', '.'])
-from get_terminal_size import get_terminal_size as GTS
-import terminal
-import image
-import core
-import arcade
+from calcium.get_terminal_size import get_terminal_size as GTS
+from calcium import terminal
+from calcium import image
+from calcium import core
+from calcium import arcade
 
 
 def rectangle(width, height, value=1):

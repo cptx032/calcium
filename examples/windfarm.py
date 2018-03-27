@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.extend(['../..', '..', '.'])
+
 from calcium import terminal
 from calcium import image
 from calcium import core

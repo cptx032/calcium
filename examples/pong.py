@@ -1,8 +1,5 @@
-# coding: utf-8
-import sys
-sys.path.extend(['.', '..'])
 from calcium.terminal import CalciumTerminal
-import calcium.core as core
+from calcium import core
 from calcium.get_terminal_size import get_terminal_size as GTS
 
 SCREEN_WIDTH, SCREEN_HEIGHT = GTS()
