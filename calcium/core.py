@@ -92,8 +92,10 @@ class CalciumScreen(object):
     BOTTOM = u'▄'
     BLANK_CHAR = u' '
 
-    def __init__(self, width, height=None):
+    def __init__(self, width, height=None, offsetx=0, offsety=0):
         u"""Represent a virtual screen."""
+        self.offsetx = offsetx
+        self.offsety = offsety
         self.width = width
         self.height = height or width
         assert (self.height % 2) == 0
@@ -115,8 +117,10 @@ class CalciumScreen(object):
             self.lines.append(line)
 
     def get_string(self):
-        r = u''
+        # each \n is 2 pixels so offsety must be divided by 2
+        r = '\n' * int(self.offsety / 2)
         for y in range(0, self.height, 2):
+            r += ' ' * self.offsetx
             for x in range(self.width):
                 top = self.lines[y][x]
                 bottom = self.lines[y + 1][x]

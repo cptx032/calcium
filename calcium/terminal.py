@@ -48,7 +48,9 @@ class CalciumTerminal(core.GenericWindow):
     ARROW_RIGHT_KEY = (27, 91, 67)
     ARROW_LEFT_KEY = (27, 91, 68)
 
-    def __init__(self, width=None, height=None, terminal_size=False, fps=60):
+    def __init__(self, width=None,
+                 height=None, terminal_size=False, fps=60,
+                 center=False):
         super(CalciumTerminal, self).__init__(fps=fps)
         available_width, available_height = get_terminal_size_in_pixels()
         if terminal_size:
@@ -59,7 +61,15 @@ class CalciumTerminal(core.GenericWindow):
                     'The width/height must be less than or equal the available'
                     ' width/height ({}, {})'.format(
                         available_width, available_height))
-        self.screen = core.CalciumScreen(width, height)
+        if not height:
+            height = width
+        offsetx = 0
+        offsety = 0
+        if center:
+            offsetx = int((available_width / 2.0) - (width / 2.0))
+            offsety = int((available_height / 2.0) - (height / 2.0))
+        self.screen = core.CalciumScreen(
+            width, height, offsetx=offsetx, offsety=offsety)
         init_anykey()
 
         # clearing the terminal
