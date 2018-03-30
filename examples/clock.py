@@ -1,27 +1,39 @@
+import os
+import sys
 from datetime import datetime
 
+from PIL.ImageFont import truetype
+
+from calcium.core import CalciumScene
 from calcium.terminal import CalciumTerminal
 from calcium.font import FontSprite
 
 
-class ClockApp(CalciumTerminal):
-    def __init__(self, *args, **kwargs):
-        self.format = kwargs.pop('format', '%H:%M:%S')
-        super(ClockApp, self).__init__(*args, **kwargs)
-        self.bind('q', self.quit, '+')
+ttf_path = os.path.join(os.path.dirname(sys.argv[0]), 'ShareTech-Regular.ttf')
 
-        self.sprite = FontSprite(10, 0, {'default': [[]]})
+
+class ClockScene(CalciumScene):
+    def __init__(self, window):
+        super(ClockScene, self).__init__('clock', window)
+        self.format = '%H:%M:%S'
+        self.bind('q', window.quit, '+')
+        self.bind(CalciumTerminal.ESCAPE_KEY, self.window.quit)
+        self.sprite = FontSprite(
+            10, 0, {'default': [[]]}, font=truetype(ttf_path, 10))
+        self.sprites.append(self.sprite)
 
     def run(self):
-        text = datetime.now().strftime(self.format)
-
-        self.sprite.text = text
+        self.sprite.text = datetime.now().strftime(self.format)
         self.sprite.align(
-            (0.5, 0.5), self.screen.width / 2.0, self.screen.height / 2.0)
-        self.screen.clear()
-        self.screen.plot(self.sprite)
-        self.go_to_0_0()
-        self.draw()
+            (0.5, 0.5), self.window.screen.width / 2.0,
+            self.window.screen.height / 2.0)
+
+
+class ClockApp(CalciumTerminal):
+    def __init__(self, *args, **kwargs):
+        super(ClockApp, self).__init__(*args, **kwargs)
+        self.scenes['clock'] = ClockScene(self)
+        self.actual_scene_name = 'clock'
 
 
 if __name__ == '__main__':

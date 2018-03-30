@@ -15,4 +15,7 @@ setup(
         'Topic :: Games/Entertainment',
         'Operating System :: Unix',
         'Programming Language :: Python :: 3 :: Only'
-    ])
+    ],
+    install_requires=[
+        'Pillow=5.0.0',
+    ],)

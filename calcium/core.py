@@ -6,7 +6,7 @@ import time
 import calcium.utils as utils
 
 
-class CalciumSprite(object):
+class CalciumSprite:
     def __init__(
             self, x, y,
             animations, frame_index=0,
@@ -86,7 +86,7 @@ class CalciumSprite(object):
             self.get_frame_from_image(image_path))
 
 
-class CalciumScreen(object):
+class CalciumScreen:
     FILLED = u'█'
     TOP = u'▀'
     BOTTOM = u'▄'
@@ -158,18 +158,21 @@ class CalciumScreen(object):
             )
 
 
-class GenericWindow(object):
-    def __init__(self, fps):
-        self.fps = fps
-        self.keep_running = True
+class CalciumScene:
+    def __init__(self, name, window):
+        self.name = name
+        self.window = window
+        self.sprites = list()
         self.function_map = dict()
 
-        self.last_fps = None
-        self.__frame_counter = 0
-        self.__fps_start_time = time.time()
+    def run(self):
+        u"""The main logic of scene. Is called many times."""
+        raise NotImplemented
 
-    def quit(self):
-        self.keep_running = False
+    def draw(self):
+        u"""Used to plot all sprite in screen."""
+        for sprite in self.sprites:
+            self.window.screen.plot(sprite)
 
     def bind(self, key, func, op=None):
         u"""Bind a function to be called when pressing a key."""
@@ -184,6 +187,43 @@ class GenericWindow(object):
         if op == '-':
             list_operation = self.function_map[key].remove
         list_operation(func)
+
+    def __repr__(self):
+        return self.name
+
+
+def _default_start_scene(window):
+    return CalciumScene('start_scene', window)
+
+
+class GenericWindow:
+    def __init__(self, width, height=None,
+                 offsetx=0, offsety=0, fps=60,
+                 start_scene=None):
+        self.fps = fps
+        self.keep_running = True
+
+        self.last_fps = None
+        self.__frame_counter = 0
+        self.__fps_start_time = time.time()
+
+        self.screen = CalciumScreen(
+            width, height, offsetx=offsetx, offsety=offsety)
+        if not start_scene:
+            start_scene = _default_start_scene(self)
+        self.scenes = {
+            start_scene.name: start_scene
+        }
+        self.actual_scene_name = start_scene.name
+
+    @property
+    def scene(self):
+        u"""Return the actual scene instance."""
+        return self.scenes[self.actual_scene_name]
+
+    def quit(self):
+        u"""Stop the mainloop of game."""
+        self.keep_running = False
 
     def next_frame(self):
         start = time.time()
@@ -201,13 +241,29 @@ class GenericWindow(object):
             self.__frame_counter = 0
             self.__fps_start_time = time.time()
 
+    def bind(self, key, func, op=None):
+        u"""Bind a function to be called when pressing a key.
+
+        This function is binded to actual scene
+        """
+        return self.scene.bind(key, func, op)
+
     def process_input(self):
         u"""Function used to receive and process events."""
         raise NotImplemented
 
     def run(self):
-        u"""Function that is called every frame. Override it."""
-        raise NotImplemented
+        u"""Function that is called every frame in mainloop.
+
+        Basically it run the 'run' function of scene, clear the
+        screen and then plot all sprites
+        """
+        self.scene.run()
+        self.screen.clear()
+        self.scene.draw()
+
+        self.clear()
+        self.draw()
 
     def draw(self):
         u"""Function the plot the screen string in window."""

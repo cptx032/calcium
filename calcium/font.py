@@ -37,5 +37,5 @@ class FontSprite(CalciumSprite):
             text, font=self.font))
         drawer = Draw(image)
         self.size = image.size
-        drawer.text((0, 0), text, fill=self.fill)
+        drawer.text((0, 0), text, fill=self.fill, font=self.font)
         return ImageSprite.get_frame_from_image(image)

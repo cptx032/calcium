@@ -51,7 +51,6 @@ class CalciumTerminal(core.GenericWindow):
     def __init__(self, width=None,
                  height=None, terminal_size=False, fps=60,
                  center=False):
-        super(CalciumTerminal, self).__init__(fps=fps)
         available_width, available_height = get_terminal_size_in_pixels()
         if terminal_size:
             width, height = available_width, available_height
@@ -68,14 +67,14 @@ class CalciumTerminal(core.GenericWindow):
         if center:
             offsetx = int((available_width / 2.0) - (width / 2.0))
             offsety = int((available_height / 2.0) - (height / 2.0))
-        self.screen = core.CalciumScreen(
-            width, height, offsetx=offsetx, offsety=offsety)
+        super(CalciumTerminal, self).__init__(
+            width=width, height=height, offsetx=offsetx, offsety=offsety,
+            fps=fps)
         init_anykey()
 
         # clearing the terminal
-        self.clear_terminal()
+        self.clear()
         self.hide_cursor()
-        self.bind(CalciumTerminal.ESCAPE_KEY, self.quit)
         atexit.register(self.__restore_terminal)
 
     def __restore_terminal(self):
@@ -112,8 +111,9 @@ class CalciumTerminal(core.GenericWindow):
         sys.stdout.flush()
 
     # fixme: change this function to "clear"
-    def clear_terminal(self):
-        sys.stdout.write('\033[2J')
+    def clear(self):
+        # sys.stdout.write('\033[2J')
+        self.go_to_0_0()
 
     def go_to_0_0(self):
         # go to (0, 0) position
@@ -122,7 +122,7 @@ class CalciumTerminal(core.GenericWindow):
     def process_input(self):
         key = anykey()
         if key:
-            for func in self.function_map.get(tuple(key), []):
+            for func in self.scene.function_map.get(tuple(key), []):
                 func()
 
     def mainloop(self):
