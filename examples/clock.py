@@ -9,17 +9,15 @@ from calcium.terminal import CalciumTerminal
 from calcium.font import FontSprite
 
 
-ttf_path = os.path.join(os.path.dirname(sys.argv[0]), 'ShareTech-Regular.ttf')
+ttf_path = os.path.join(os.path.dirname(sys.argv[0]), 'Pixeled.ttf')
 
 
 class ClockScene(CalciumScene):
     def __init__(self, window):
         super(ClockScene, self).__init__('clock', window)
         self.format = '%H:%M:%S'
-        self.bind('q', window.quit, '+')
-        self.bind(CalciumTerminal.ESCAPE_KEY, self.window.quit)
         self.sprite = FontSprite(
-            10, 0, {'default': [[]]}, font=truetype(ttf_path, 10))
+            10, 0, {'default': [[]]}, font=truetype(ttf_path, 4))
         self.sprites.append(self.sprite)
 
     def run(self):
@@ -39,4 +37,3 @@ class ClockApp(CalciumTerminal):
 if __name__ == '__main__':
     app = ClockApp(terminal_size=True, fps=5)
     app.mainloop()
-    print(app.last_fps, 'fps')

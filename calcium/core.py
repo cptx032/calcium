@@ -71,6 +71,61 @@ class CalciumSprite:
     def clone(self):
         return copy.deepcopy(self)
 
+    @property
+    def width(self):
+        return self.size[0]
+
+    @property
+    def height(self):
+        return self.size[1]
+
+    @property
+    def nw(self):
+        return [self.x, self.y]
+
+    @property
+    def sw(self):
+        return [self.x, self.y + self.height]
+
+    @property
+    def ne(self):
+        return [self.x + self.width, self.y]
+
+    @property
+    def se(self):
+        return [self.x + self.width, self.y + self.height]
+
+    def is_inside(self, x, y):
+        u"""Verify if point (x y) is inside the sprite 'self'."""
+        inx = x < (self.x + self.width) and x > self.x
+        if not inx:
+            return False
+        return y < (self.y + self.height) and y > self.y
+
+    def touching(self, sprite):
+        u"""Return True if 'self' i touching 'sprite'."""
+        nw = sprite.is_inside(*self.nw)
+        sw = sprite.is_inside(*self.sw)
+        ne = sprite.is_inside(*self.ne)
+        se = sprite.is_inside(*self.se)
+        return nw or sw or ne or se
+
+    # def t_left(self, sprite):
+    #     u"""Return True if 'self' is touching your left side."""
+    #     return sprite.point_inside(sprite.nw) or sprite.point_inside(self.sw)
+
+    # def t_right(self, sprite):
+    #     u"""Return True if 'self' is touching your right side."""
+    #     return sprite.point_inside(self.ne) or sprite.point_inside(self.se)
+
+    # def t_down(self, sprite):
+    #     u"""Return True if 'self' is touching your down side."""
+    #     return sprite.point_inside(self.sw) or sprite.point_inside(self.se)
+
+    # def t_up(self, sprite):
+    #     u"""Return True if 'self' is touching your up side."""
+    #     return sprite.point_inside(self.nw) or sprite.point_inside(self.ne)
+
     @staticmethod
     def get_frame_from_image(image_path):
         from PIL import Image
@@ -165,6 +220,8 @@ class CalciumScene:
         self.sprites = list()
         self.function_map = dict()
 
+        self.bind('q', window.quit, '+')
+
     def run(self):
         u"""The main logic of scene. Is called many times."""
         raise NotImplemented
@@ -192,14 +249,9 @@ class CalciumScene:
         return self.name
 
 
-def _default_start_scene(window):
-    return CalciumScene('start_scene', window)
-
-
 class GenericWindow:
     def __init__(self, width, height=None,
-                 offsetx=0, offsety=0, fps=60,
-                 start_scene=None):
+                 offsetx=0, offsety=0, fps=60):
         self.fps = fps
         self.keep_running = True
 
@@ -209,17 +261,19 @@ class GenericWindow:
 
         self.screen = CalciumScreen(
             width, height, offsetx=offsetx, offsety=offsety)
-        if not start_scene:
-            start_scene = _default_start_scene(self)
-        self.scenes = {
-            start_scene.name: start_scene
-        }
-        self.actual_scene_name = start_scene.name
+        self.scenes = dict()
+        self.actual_scene_name = None
 
     @property
     def scene(self):
         u"""Return the actual scene instance."""
         return self.scenes[self.actual_scene_name]
+
+    def add_scene(self, scene, activate=True):
+        u"""Helper to add a scene to app."""
+        self.scenes[scene.name] = scene
+        if activate:
+            self.actual_scene_name = scene.name
 
     def quit(self):
         u"""Stop the mainloop of game."""
@@ -258,8 +312,8 @@ class GenericWindow:
         Basically it run the 'run' function of scene, clear the
         screen and then plot all sprites
         """
-        self.scene.run()
         self.screen.clear()
+        self.scene.run()
         self.scene.draw()
 
         self.clear()

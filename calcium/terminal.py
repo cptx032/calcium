@@ -73,7 +73,9 @@ class CalciumTerminal(core.GenericWindow):
         init_anykey()
 
         # clearing the terminal
-        self.clear()
+        self.go_to_0_0()
+        self.blank_terminal()
+        self.go_to_0_0()
         self.hide_cursor()
         atexit.register(self.__restore_terminal)
 
@@ -110,14 +112,15 @@ class CalciumTerminal(core.GenericWindow):
         sys.stdout.write(self.screen.get_string())
         sys.stdout.flush()
 
-    # fixme: change this function to "clear"
     def clear(self):
-        # sys.stdout.write('\033[2J')
         self.go_to_0_0()
 
     def go_to_0_0(self):
         # go to (0, 0) position
         sys.stdout.write('\033[0;0H')
+
+    def blank_terminal(self):
+        sys.stdout.write('\033[2J')
 
     def process_input(self):
         key = anykey()

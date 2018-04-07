@@ -13,6 +13,7 @@ class FontSprite(CalciumSprite):
         self.__text = ''
         self.font = kwargs.pop('font', load_default())
         self.fill = kwargs.pop('fill', (255,))
+        self.text_align = kwargs.pop('text_align', 'left')
 
         # I'm using a 1x1 image just to create a Draw instance to calculates
         # the size of final image
@@ -37,5 +38,7 @@ class FontSprite(CalciumSprite):
             text, font=self.font))
         drawer = Draw(image)
         self.size = image.size
-        drawer.text((0, 0), text, fill=self.fill, font=self.font)
+        drawer.multiline_text(
+            (0, 0), text, fill=self.fill,
+            font=self.font, align=self.text_align)
         return ImageSprite.get_frame_from_image(image)

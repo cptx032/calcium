@@ -1,5 +1,4 @@
-# coding: utf-8
-u"""Module to draw polygons."""
+"""Module to draw polygons."""
 
 
 def lerp(a, b, x):
@@ -29,16 +28,20 @@ def oval(width, height, color=1, border=-1):
     raise NotImplemented
 
 
-def rectangle(width, height, color=1, border=-1):
+def rectangle(width, height, color=1, fill=False):
     u"""Return a image with a nw-anchored rectangle.
 
     Params:
-        border: controls the width/size of border. If -1 the rectangle is drawn
-            filled
         width, height: controls the size of rectangle
         color: 0 or 1
     """
-    raise NotImplemented
+    image = list()
+    for y in range(height):
+        for x in range(width):
+            # borders
+            if x == 0 or y == 0 or x == (width - 1) or y == (height - 1) or fill:
+                image.extend([x, y, color])
+    return image
 
 
 def triangle(*args):

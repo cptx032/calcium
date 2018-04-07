@@ -18,4 +18,5 @@ setup(
     ],
     install_requires=[
         'Pillow=5.0.0',
+        'PyTweening=1.0.3'
     ],)

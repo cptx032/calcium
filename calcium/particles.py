@@ -1,10 +1,8 @@
 # coding: utf-8
 from random import randint as ri
-import sys
-sys.path.extend(['.', '..'])
-from terminal import CalciumTerminal
-import core
-from get_terminal_size import get_terminal_size as GTS
+from calcium.terminal import CalciumTerminal
+from calcium import core
+from calcium.get_terminal_size import get_terminal_size as GTS
 
 SCREEN_WIDTH, SCREEN_HEIGHT = GTS()
 SCREEN_HEIGHT *= 2
