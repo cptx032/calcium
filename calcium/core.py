@@ -223,13 +223,21 @@ class CalciumScene:
         self.bind('q', window.quit, '+')
 
     def run(self):
-        u"""The main logic of scene. Is called many times."""
+        u"""The main logic of scene. Is called once per frame."""
         raise NotImplemented
 
     def draw(self):
         u"""Used to plot all sprite in screen."""
         for sprite in self.sprites:
             self.window.screen.plot(sprite)
+
+    def schedule_once(self, func, seconds):
+        u"""Schedule the function 'func' to be executed after x seconds."""
+        raise NotImplemented
+
+    def schedule_interval(self, func, interval):
+        u"""Schedule the function 'func' to be executed at each x seconds."""
+        raise NotImplemented
 
     def bind(self, key, func, op=None):
         u"""Bind a function to be called when pressing a key."""
@@ -280,6 +288,7 @@ class GenericWindow:
         self.keep_running = False
 
     def next_frame(self):
+        u"""Process one frame completely."""
         start = time.time()
         self.process_input()
         self.run()
