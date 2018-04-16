@@ -38,4 +38,4 @@ print(screen)
 #### CalciumSprite
 The CalciumSprite is a collection of pixels. It receives a position and a dictionary with frames.
 
-Pixeled Font - https://www.dafont.com/pixeled.font
+m3x6 font - https://managore.itch.io/m5x7

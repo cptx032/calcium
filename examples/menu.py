@@ -11,7 +11,7 @@ from calcium.font import FontSprite
 
 
 ttf_path = os.path.join(
-    os.path.dirname(sys.argv[0]), 'Pixeled.ttf')
+    os.path.dirname(sys.argv[0]), 'm3x6.ttf')
 
 
 class MainScene(CalciumScene):
@@ -27,7 +27,7 @@ class MainScene(CalciumScene):
         self.anim.start()
         self.fps_label = FontSprite(10, 0, {
             'default': [[]]
-        }, font=truetype(ttf_path, 5), text_align='right')
+        }, font=truetype(ttf_path, 15), text_align='right')
         self.sprites.append(self.fps_label)
         self.sprites.append(self.rec)
 

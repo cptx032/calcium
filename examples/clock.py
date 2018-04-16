@@ -9,7 +9,7 @@ from calcium.terminal import CalciumTerminal
 from calcium.font import FontSprite
 
 
-ttf_path = os.path.join(os.path.dirname(sys.argv[0]), 'Pixeled.ttf')
+ttf_path = os.path.join(os.path.dirname(sys.argv[0]), 'm3x6.ttf')
 
 
 class ClockScene(CalciumScene):
@@ -17,7 +17,7 @@ class ClockScene(CalciumScene):
         super(ClockScene, self).__init__('clock', window)
         self.format = '%H:%M:%S'
         self.sprite = FontSprite(
-            10, 0, {'default': [[]]}, font=truetype(ttf_path, 4))
+            10, 0, {'default': [[]]}, font=truetype(ttf_path, 15))
         self.sprites.append(self.sprite)
 
     def run(self):
