@@ -213,34 +213,60 @@ class CalciumScreen:
             )
 
 
+class Timer:
+    def __init__(self):
+        self.__schedule_funcs = dict()
+
+    def after(self, seconds, func):
+        """Schedule a function to be runned at 'seconds' seconds."""
+        self.__schedule_funcs[func] = [seconds, time.time()]
+
+    def tick(self):
+        to_delete = list()
+        to_run = list()
+        for function, time_info in self.__schedule_funcs.items():
+            if time.time() - time_info[1] >= time_info[0]:
+                to_run.append(function)
+                to_delete.append(function)
+        # we need to delete the functions before
+        # run the functions for situation in which
+        # the function call .after scheduling
+        # it self
+        for k in to_delete:
+            del self.__schedule_funcs[k]
+        for func in to_run:
+            func()
+
+
 class CalciumScene:
     def __init__(self, name, window):
         self.name = name
         self.window = window
         self.sprites = list()
         self.function_map = dict()
+        self.timer = Timer()
 
         self.bind('q', window.quit, '+')
 
     def run(self):
-        u"""The main logic of scene. Is called once per frame."""
-        raise NotImplemented
+        """The main logic of scene. Is called once per frame."""
+        self.timer.tick()
 
     def draw(self):
-        u"""Used to plot all sprite in screen."""
+        """Used to plot all sprite in screen."""
         for sprite in self.sprites:
             self.window.screen.plot(sprite)
 
     def schedule_once(self, func, seconds):
-        u"""Schedule the function 'func' to be executed after x seconds."""
+        """Schedule the function 'func' to be executed after x seconds."""
         raise NotImplemented
 
     def schedule_interval(self, func, interval):
-        u"""Schedule the function 'func' to be executed at each x seconds."""
+        """Schedule the function 'func' to be executed at each x seconds."""
         raise NotImplemented
 
     def bind(self, key, func, op=None):
-        u"""Bind a function to be called when pressing a key."""
+        """Bind a function to be called when pressing a key."""
         assert op in (None, '+', '-'), ValueError
         if type(key) != tuple:
             key = (ord(key), )

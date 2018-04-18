@@ -21,6 +21,7 @@ class ClockScene(CalciumScene):
         self.sprites.append(self.sprite)
 
     def run(self):
+        super(ClockScene, self).run()
         self.sprite.text = datetime.now().strftime(self.format)
         self.sprite.align(
             (0.5, 0.5), self.window.screen.width / 2.0,
