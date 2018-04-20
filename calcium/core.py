@@ -257,14 +257,6 @@ class CalciumScene:
         for sprite in self.sprites:
             self.window.screen.plot(sprite)
 
-    def schedule_once(self, func, seconds):
-        """Schedule the function 'func' to be executed after x seconds."""
-        raise NotImplemented
-
-    def schedule_interval(self, func, interval):
-        """Schedule the function 'func' to be executed at each x seconds."""
-        raise NotImplemented
-
     def bind(self, key, func, op=None):
         """Bind a function to be called when pressing a key."""
         assert op in (None, '+', '-'), ValueError
