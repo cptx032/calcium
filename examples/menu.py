@@ -1,6 +1,3 @@
-import os
-import sys
-
 from PIL.ImageFont import truetype
 
 from calcium.core import CalciumScene, CalciumSprite
@@ -8,10 +5,10 @@ from calcium.terminal import CalciumTerminal
 from calcium.draw import rectangle
 from calcium.animation import Animation
 from calcium.font import FontSprite
+from calcium.utils import local_path
 
 
-ttf_path = os.path.join(
-    os.path.dirname(sys.argv[0]), 'm3x6.ttf')
+ttf_path = local_path('m3x6.ttf')
 
 
 class MainScene(CalciumScene):
@@ -38,6 +35,6 @@ class MainScene(CalciumScene):
         self.fps_label.align((1.0, 1.0), 80, 48)
 
 
-app = CalciumTerminal(terminal_size=True, fps=100)
+app = CalciumTerminal(80, 48, fps=100)
 app.add_scene(MainScene(app))
 app.mainloop()

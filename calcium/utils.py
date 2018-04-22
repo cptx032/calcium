@@ -1,4 +1,10 @@
-# coding: utf-8
+import os
+import sys
+
+
+def local_path(file_name):
+    """Return the relative path to some file."""
+    return os.path.join(os.path.dirname(sys.argv[0]), file_name)
 
 
 def get_gray(image, x, y):

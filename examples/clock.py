@@ -1,5 +1,3 @@
-import os
-import sys
 from datetime import datetime
 
 from PIL.ImageFont import truetype
@@ -7,9 +5,10 @@ from PIL.ImageFont import truetype
 from calcium.core import CalciumScene
 from calcium.terminal import CalciumTerminal
 from calcium.font import FontSprite
+from calcium.utils import local_path
 
 
-ttf_path = os.path.join(os.path.dirname(sys.argv[0]), 'm3x6.ttf')
+ttf_path = local_path('m3x6.ttf')
 
 
 class ClockScene(CalciumScene):
