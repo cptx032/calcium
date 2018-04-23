@@ -72,8 +72,7 @@ class CalciumTerminal(core.GenericWindow):
             fps=fps)
         init_anykey()
 
-        # clearing the terminal
-        self.go_to_0_0()
+        self.enter_alternate_screen()
         self.blank_terminal()
         self.go_to_0_0()
         self.hide_cursor()
@@ -82,6 +81,7 @@ class CalciumTerminal(core.GenericWindow):
     def __restore_terminal(self):
         sys.stdout.write('\033[0m')
         self.show_cursor()
+        self.exit_alternate_screen()
 
     def set_fg_color(self, r, g, b):
         sys.stdout.write(
@@ -108,6 +108,12 @@ class CalciumTerminal(core.GenericWindow):
     def show_cursor(self):
         sys.stdout.write('\033[?25h')
 
+    def enter_alternate_screen(self):
+        sys.stdout.write('\033[?47h')
+
+    def exit_alternate_screen(self):
+        sys.stdout.write('\033[?47l')
+
     def draw(self):
         sys.stdout.write(self.screen.get_string())
         sys.stdout.flush()
@@ -121,6 +127,10 @@ class CalciumTerminal(core.GenericWindow):
 
     def blank_terminal(self):
         sys.stdout.write('\033[2J')
+        # the \033[3J will clear all normal buffer even in alternate mode
+        # so is more 'secure' do \033[2J, if the user has not alternate mode
+        # enable the screen will scroll a little (but this is not a problem)
+        # sys.stdout.write('\033[3J')
 
     def process_input(self):
         key = anykey()
