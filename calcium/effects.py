@@ -9,6 +9,7 @@ from calcium.core import Timer
 class InvertScreenEffect:
     @staticmethod
     def process(screen):
+        # fixme: receive an sprite too
         # benchmark who is more faster
         # screen.lines = [[int(not col) for col in line] for line in screen.lines]
         for line in screen.lines:
@@ -16,7 +17,7 @@ class InvertScreenEffect:
                 line[i] = 1 - pixel
 
 
-class HorizontalOffset:
+class HorizontalOffsetScreenEffect:
     @staticmethod
     def process(screen, length=10):
         for i, line in enumerate(screen.lines):
@@ -26,8 +27,11 @@ class HorizontalOffset:
 
 
 class BorderScreenEffect:
+    """Creates a border around the screen."""
+
     @staticmethod
     def process(screen):
+        # fixme: receive an sprite too
         rec = draw.rectangle(screen.width, screen.height, fill=False)
         sprite = CalciumSprite(0, 0, {'default': [rec, ]})
         screen.plot(sprite)
