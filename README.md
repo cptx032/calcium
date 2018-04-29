@@ -1,6 +1,14 @@
 # calcium
 
-Calcium is a python 3 library to build games (or interactive applications) in linux terminals (or any text-device). It works by creating a "CalciumScreen" that represents a virtual screen filled with 0s and 1s. You can use it to plot the text in any place you want.
+Calcium is a python 3 library to build **games** (or interactive applications) in **linux terminals** (or any text-device). It works by creating a "CalciumScreen" that represents a virtual screen filled with 0s and 1s. You can use it to plot the text in any place you want.
+
+<p align="center">
+  <img src="screenshots/flappixel.gif?raw=true" alt="flappixel"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/runner.gif?raw=true" alt="runner"/>
+</p>
 
 ### Hello World
 ```python3
