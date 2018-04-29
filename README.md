@@ -1,41 +1,35 @@
 # calcium
-Python 2/3 ascii/text game library. See examples
 
-Images from http://www.hlevkin.com/default.html#articles
+Calcium is a python 3 library to build games (or interactive applications) in linux terminals (or any text-device). It works by creating a "CalciumScreen" that represents a virtual screen filled with 0s and 1s. You can use it to plot the text in any place you want.
 
-![cameraman.png](screenshots/cameraman.png) ![dollar.png](screenshots/dollar.png) ![girlface.png](screenshots/girlface.png) ![houses.png](screenshots/houses.png) ![lenna.png](screenshots/lenna.png) ![moon.png](screenshots/moon.png) ![particles.png](screenshots/particles.png) ![simple_arcade_physics.png](screenshots/simple_arcade_physics.png)
+### Hello World
+```python3
+from calcium.terminal import CalciumTerminal
+from calcium.core import CalciumScene
 
-#### monochrome.py
-In `tools/spriter.py` one pixel is created using two characters, in `tools/monochrome.py` four pixels are create using two characters.
-This is better to make terminal applications where normally we have only 80x24
-![monochrome.png](screenshots/monochrome.png) 
-
-## calcium.py
-#### CalciumScreen
-Represents the virtual ascii screen. It has the `get_string` method that returns the string/ascii representation of screen. You can use this method to "plot" the screen in any place you want. The `window` module is a implementation of calcium classes in tkinter/tk. The `clear_color` property controls the color used to clear the screen. Any color is a integer between 0 and 3 representing the level of color. The levels are the 4 characters: █, ▓, ▒, ░.
-
-##### clear
-erase all screen content and fills the screen with the `clear_color`
-
-##### get_string
-get the string representation of screen
-
-##### set_pixel(x, y, level)
-"Plot" a pixel in (x, y) position with the color `level`. The level must be a integer between 0 and 3.
-
-##### plot(sprite)
-Receives a sprite and plot all pixels if it in screen.
-
-Example:
-```python
-import calcium
-screen = calcium.CalciumScreen(64)
-screen.set_pixel(30, 30, 0)
-# you can use "get_pixel" or just cast to string (__repr__)
-print(screen)
+if __name__ == '__main__':
+    app = CalciumTerminal(terminal_size=True)
+    app.add_scene(CalciumScene('mainscene', app))
+    app.mainloop()
 ```
 
-#### CalciumSprite
-The CalciumSprite is a collection of pixels. It receives a position and a dictionary with frames.
+The code above does actually..nothing. Just a blank screen.
+
+
+## Technical details
+
+A "pixel" in this virtual screen has only two values: 0 and 1. The pixel 1 is mapped to a "filled" character, and 0 is mapped to a blank character.
+
+Calcium uses four characters to transform a virtual screen to
+a string:
+
+```python
+FILLED = u'█'
+TOP = u'▀'
+BOTTOM = u'▄'
+BLANK_CHAR = u' '
+```
+
+Because a character is naturally "vertical" calcium splits it in two. So, each character represents two pixel, one in top of other. This is why every virtual screen must have an even number height.
 
 m3x6 font - https://managore.itch.io/m5x7

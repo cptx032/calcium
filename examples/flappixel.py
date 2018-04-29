@@ -1,6 +1,6 @@
 from calcium.core import CalciumScene, CalciumSprite
 from calcium.terminal import CalciumTerminal
-from calcium.effects import InvertEffect
+from calcium.effects import InvertScreenEffect
 from calcium.draw import rectangle
 
 
@@ -52,7 +52,7 @@ class MainScene(CalciumScene):
 
     def draw(self):
         super(MainScene, self).draw()
-        InvertEffect.process(self.window.screen)
+        InvertScreenEffect.process(self.window.screen)
 
 if __name__ == '__main__':
     app = CalciumTerminal(center=True, width=32, fps=60)

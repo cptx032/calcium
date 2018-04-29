@@ -15,7 +15,7 @@ class MainScene(CalciumScene):
     def __init__(self, app):
         super(MainScene, self).__init__('mainscene', app)
         self.rec = CalciumSprite(-40, 0, {
-            'default': [rectangle(40, 48, fill=True)]
+            'default': [rectangle(40, self.window.screen.height, fill=True)]
         })
         self.anim = Animation(
             obj=self.rec, prop='x',
@@ -35,6 +35,6 @@ class MainScene(CalciumScene):
         self.fps_label.align((1.0, 1.0), 80, 48)
 
 
-app = CalciumTerminal(80, 48, fps=100)
+app = CalciumTerminal(terminal_size=True, fps=100)
 app.add_scene(MainScene(app))
 app.mainloop()

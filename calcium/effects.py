@@ -9,11 +9,9 @@ from calcium.core import Timer
 class InvertScreenEffect:
     @staticmethod
     def process(screen):
-        # fixme: receive an sprite too
-        # benchmark who is more faster
-        # screen.lines = [[int(not col) for col in line] for line in screen.lines]
         for line in screen.lines:
-            for i, pixel in enumerate(line):
+            for i in range(len(line)):
+                pixel = line[i]
                 line[i] = 1 - pixel
 
 
