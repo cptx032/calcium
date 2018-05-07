@@ -11,7 +11,7 @@ Calcium is a python 3 library to build **games** (or interactive applications) i
 </p>
 
 ### Hello World
-```python3
+```python
 from calcium.terminal import CalciumTerminal
 from calcium.core import CalciumScene
 

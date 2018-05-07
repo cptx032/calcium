@@ -16,22 +16,10 @@ def line(x1, y1, x2, y2, color=1):
     return image
 
 
-def oval(width, height, color=1, border=-1):
-    u"""Return a image with a nw-anchored circle/oval.
-
-    Params:
-        border: controls the width/size of border. If -1 the oval is drawn
-            filled
-        width, height: controls the size of oval
-        color: 0 or 1
-    """
-    raise NotImplemented
-
-
 def rectangle(width, height, color=1, fill=False):
     u"""Return a image with a nw-anchored rectangle.
 
-    Params:
+    Args:
         width, height: controls the size of rectangle
         color: 0 or 1
     """
@@ -42,8 +30,3 @@ def rectangle(width, height, color=1, fill=False):
             if x == 0 or y == 0 or x == (width - 1) or y == (height - 1) or fill:
                 image.extend([x, y, color])
     return image
-
-
-def triangle(*args):
-    u"""Draw a triangle. Used to create polygons."""
-    raise NotImplemented

@@ -6,7 +6,7 @@ from calcium.core import CalciumScene
 from calcium.terminal import CalciumTerminal
 from calcium.font import FontSprite
 from calcium.utils import local_path
-from calcium.effects import InvertScreenEffect
+from calcium.effects import InvertScreenEffect, FlashScreenEffect
 
 
 ttf_path = local_path('m3x6.ttf')
@@ -18,6 +18,8 @@ class ClockScene(CalciumScene):
         self.format = '%H:%M:%S'
         self.sprite = FontSprite(
             10, 0, {'default': [[]]}, font=truetype(ttf_path, 15))
+        self.sprite.effects.append(InvertScreenEffect)
+        self.sprite.effects.append(FlashScreenEffect)
         self.sprites.append(self.sprite)
 
     def run(self):
@@ -29,8 +31,8 @@ class ClockScene(CalciumScene):
             self.window.screen.height / 2.0)
 
     def draw(self):
+        self.window.screen.fill()
         super(ClockScene, self).draw()
-        InvertScreenEffect.process(self.window.screen)
 
 
 class ClockApp(CalciumTerminal):
@@ -41,5 +43,5 @@ class ClockApp(CalciumTerminal):
 
 
 if __name__ == '__main__':
-    app = ClockApp(terminal_size=True, fps=100)
+    app = ClockApp(terminal_size=True, fps=200)
     app.mainloop()

@@ -14,6 +14,12 @@ class InvertScreenEffect:
                 pixel = line[i]
                 line[i] = 1 - pixel
 
+    @staticmethod
+    def sprite_effect(pixels, sprite):
+        for i in range(0, len(pixels), 3):
+            pixels[i + 2] = int(not pixels[i + 2])
+        return pixels
+
 
 class HorizontalOffsetScreenEffect:
     @staticmethod
@@ -33,6 +39,19 @@ class BorderScreenEffect:
         rec = draw.rectangle(screen.width, screen.height, fill=False)
         sprite = CalciumSprite(0, 0, {'default': [rec, ]})
         screen.plot(sprite)
+
+    @staticmethod
+    def sprite_effect(pixels, sprite):
+        # obs.: in the init of a sprite the width and height is calculated
+        # iterating over the pixels, so the first call to
+        # CalciumSprite.get_pixels will not have CalciumSprite.width field
+        # setted/filled. This info is just for future changes in this effect
+        rec = draw.rectangle(sprite.width, sprite.height)
+        for i in range(0, len(rec), 3):
+            pixels.append(rec[i])
+            pixels.append(rec[i + 1])
+            pixels.append(rec[i + 2])
+        return pixels
 
 
 class FlashScreenEffect:
@@ -70,3 +89,19 @@ class FlashScreenEffect:
             InvertScreenEffect.process(FlashScreenEffect.screen)
 
         FlashScreenEffect.timer.tick()
+
+    @staticmethod
+    def sprite_effect(pixels, sprite, frequency=0.5):
+        """Will be called every frame."""
+        FlashScreenEffect.frequency = frequency
+
+        if not FlashScreenEffect._binded:
+            FlashScreenEffect.timer.after(
+                frequency, FlashScreenEffect._process)
+            FlashScreenEffect._binded = True
+
+        if FlashScreenEffect.state == 1:
+            pixels = InvertScreenEffect.sprite_effect(pixels, sprite)
+
+        FlashScreenEffect.timer.tick()
+        return pixels

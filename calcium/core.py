@@ -19,6 +19,7 @@ class CalciumSprite:
         self.animation_key = animation_key or list(animations.keys())[0]
         self.frame_index = frame_index
         self.size = size
+        self.effects = []
         if not size:
             self.size = CalciumSprite.get_size_from_pixels(
                 self.get_pixels())
@@ -56,7 +57,11 @@ class CalciumSprite:
         self.y = y + offsety
 
     def get_pixels(self):
-        return self.animations.get(self.animation_key)[self.frame_index]
+        pixels = list(self.animations.get(
+            self.animation_key)[self.frame_index])
+        for effect in self.effects:
+            pixels = effect.sprite_effect(pixels, self)
+        return pixels
 
     def next_frame(self):
         self.frame_index += 1
