@@ -17,6 +17,6 @@ setup(
         'Programming Language :: Python :: 3 :: Only'
     ],
     install_requires=[
-        'Pillow=5.0.0',
-        'PyTweening=1.0.3'
+        'Pillow==5.0.0',
+        'PyTweening==1.0.3'
     ],)
