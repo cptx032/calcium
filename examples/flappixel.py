@@ -7,7 +7,7 @@ from calcium.draw import rectangle
 class MainScene(CalciumScene):
     def __init__(self, window):
         super(MainScene, self).__init__('mainscene', window)
-        self.pixel = CalciumSprite(8, 16, animations={'d': [[0,0,1]]})
+        self.pixel = CalciumSprite(8, 16, animations={'d': [[0, 0, 1]]})
         self.sprites.append(self.pixel)
 
         self.rec = CalciumSprite(

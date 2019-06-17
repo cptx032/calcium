@@ -32,27 +32,27 @@ class PongBall(core.CalciumSprite):
             self.vely *= -1
 
 
-class PongApp(CalciumTerminal):
-    def __init__(self, *args, **kwargs):
+class PongScene(core.CalciumScene):
+    def __init__(self, window):
+        super(PongScene, self).__init__('mainscene', window)
         self.ball = PongBall(0, 0, {'normal': [[0, 0, 1]]}, velx=3, vely=2)
-        CalciumTerminal.__init__(self, *args, **kwargs)
-        self.set_fg_color(0xec,0xf0, 0xf1)
-        self.set_bg_color(0x2e, 0xcc, 0x71)
-        self.screen.clear()
         self.bind(
-            CalciumTerminal.ARROW_RIGHT_KEY, self.__change_bg_color, '+')
-        self.bind('q', self.quit, '+')
+            CalciumTerminal.ARROW_RIGHT_KEY,
+            self.__change_bg_color,
+            '+'
+        )
+        self.sprites.append(self.ball)
 
     def __change_bg_color(self):
-        self.set_bg_color(255, 0, 0)
+        self.window.set_bg_color(255, 0, 0)
 
     def run(self):
         self.ball.update()
-        self.screen.clear()
-        self.screen.plot(self.ball)
-        self.go_to_0_0()
-        self.draw()
 
 if __name__ == '__main__':
-    PongApp(
-        SCREEN_WIDTH, SCREEN_HEIGHT).mainloop()
+    app = CalciumTerminal(fps=60, terminal_size=True)
+    app.set_fg_color(0xec, 0xf0, 0xf1)
+    app.set_bg_color(0x2e, 0xcc, 0x71)
+    app.scenes['mainscene'] = PongScene(app)
+    app.actual_scene_name = 'mainscene'
+    app.mainloop()
