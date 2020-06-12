@@ -1,22 +1,12 @@
-"""Module to draw polygons."""
+# coding utf-8
+
+import math
+import typing
 
 
-def lerp(a, b, x):
-    u"""Linear interpolation."""
-    return a + ((b - a) * x)
-
-
-def line(x1, y1, x2, y2, color=1):
-    u"""Return a image with a line with points: (x1, y1), (x2, y2)."""
-    image = list()
-    for x in range(x1, x2):
-        c = abs(float(x) / (x2 - x1))
-        y = lerp(y1, y2, c)
-        image.extend([x, y, color])
-    return image
-
-
-def rectangle(width, height, color=1, fill=False):
+def rectangle(
+    width: int, height: int, color: int = 1, fill: bool = False
+) -> typing.List[int]:
     u"""Return a image with a nw-anchored rectangle.
 
     Args:
@@ -27,6 +17,29 @@ def rectangle(width, height, color=1, fill=False):
     for y in range(height):
         for x in range(width):
             # borders
-            if x == 0 or y == 0 or x == (width - 1) or y == (height - 1) or fill:
+            if (
+                x == 0
+                or y == 0
+                or x == (width - 1)
+                or y == (height - 1)
+                or fill
+            ):
                 image.extend([x, y, color])
     return image
+
+
+def line(
+    x1: float, y1: float, x2: float, y2: float, color: int = 1
+) -> typing.List[int]:
+    """Return a pixel data with a line."""
+    pixels: typing.List[int] = list()
+    dx: float = x2 - x1
+    dy: float = y2 - y1
+    hip: float = math.sqrt(dy ** 2 + dx ** 2)
+    sin: float = dy / hip
+    cos: float = dx / hip
+    for i in range(int(hip)):
+        x: int = math.floor((cos * i) + x1)
+        y: int = math.floor((sin * i) + y1)
+        pixels.extend([x, y, color])
+    return pixels
