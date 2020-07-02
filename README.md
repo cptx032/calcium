@@ -1,5 +1,9 @@
 # Calcium
 
+<p align="center">
+  <img src="docs/calcium.gif?raw=true" alt="example-01-running"/>
+</p>
+
 Calcium is a python 3 library to build **games** (or interactive applications) in **terminal emulators**. It works by creating a "Calcium Screen" that represents a virtual screen filled with 0s and 1s and plotting this virtual screen to the terminal emulator.
 
 # Learning the basics
