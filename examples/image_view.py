@@ -23,6 +23,12 @@ class ImageViewApp(TerminalApplication):
             dest="bg_color",
         )
         self.parser.add_argument(
+            "--threshold",
+            type=int,
+            help="The grayscale threshold value",
+            dest="threshold",
+        )
+        self.parser.add_argument(
             "--fg",
             type=str,
             help="The foreground/text color in the format RRGGBB",
@@ -57,7 +63,9 @@ class ImageViewApp(TerminalApplication):
 
         self.sprite["x"] = (self.width / 2) - (image.size[0] / 2)
         self.sprite["y"] = (self.height / 2) - (image.size[1] / 2)
-        self.sprite.filters.append(RawImageFilter(image=image))
+        self.sprite.filters.append(
+            RawImageFilter(image=image, threshold=args.threshold or 255 / 2)
+        )
         if args.invert:
             self.sprite.filters.append(InvertFilter())
 

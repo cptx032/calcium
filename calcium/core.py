@@ -2,6 +2,7 @@
 
 import atexit
 import os
+import signal
 import sys
 import termios
 import time
@@ -86,8 +87,9 @@ class ObservableSet:
 
 
 class BaseFilter:
-    def __init__(self):
-        self.active: bool = True
+    def __init__(self, active: bool = True, name: str = ""):
+        self.active: bool = active
+        self.name: str = name
 
     def get(self, pixels: typing.List[int]) -> typing.List[int]:
         raise NotImplementedError
@@ -112,6 +114,12 @@ class Sprite(ObservableSet):
         for f in filter(lambda i: i.active, self.filters):
             last_pixels = f.get(last_pixels)
         return last_pixels
+
+    def get_filter_by_name(self, name: str) -> typing.Union[BaseFilter, None]:
+        for f in self.filters:
+            if f.name == name:
+                return f
+        return None
 
 
 class Screen:
@@ -252,6 +260,9 @@ class TerminalApplication(Bindable):
         self.stop: bool = False
         if terminal_size:
             width, height = available_width, available_height
+            signal.signal(
+                signal.SIGWINCH, lambda *args, **kwargs: self._rebuild_screen()
+            )
         else:
             if width > available_width:
                 raise ValueError(
@@ -262,7 +273,9 @@ class TerminalApplication(Bindable):
                     "Height cant be greater than {}".format(available_height)
                 )
 
-        self.screen: Screen = Screen(width=width, height=height)
+        self.screen: Screen = self._get_screen(width, height)
+        self._fg_color: typing.Union[typing.List[int], None] = None
+        self._bg_color: typing.Union[typing.List[int], None] = None
         self.fps: int = fps
         self.center: bool = center
         self._frame_counter: int = 0
@@ -276,6 +289,16 @@ class TerminalApplication(Bindable):
         self.blank_terminal()
         self.hide_cursor()
         atexit.register(self.restore_terminal)
+
+    def _rebuild_screen(self):
+        (
+            available_width,
+            available_height,
+        ) = TerminalApplication.get_terminal_size_in_pixels()
+        self.screen = self._get_screen(available_width, available_height)
+
+    def _get_screen(self, width: int, height: int) -> Screen:
+        return Screen(width=width, height=height)
 
     @property
     def width(self) -> int:
@@ -393,11 +416,18 @@ class TerminalApplication(Bindable):
         """Stop the main processing."""
         self.stop = True
 
-    def set_fg_color(self, r, g, b):
+    def set_fg_color(self, r: int, g: int, b: int) -> None:
         sys.stdout.write("\033[38;2;{};{};{}m".format(r, g, b))
+        self._fg_color = [r, g, b]
 
-    def set_bg_color(self, r, g, b):
+    def set_bg_color(self, r: int, g: int, b: int) -> None:
         sys.stdout.write("\033[48;2;{};{};{}m".format(r, g, b))
+        self._bg_color = [r, g, b]
+
+    def restore_colors(self) -> None:
+        sys.stdout.write("\033[m\017")
+        self._bg_color = None
+        self._fg_color = None
 
 
 if __name__ == "__main__":

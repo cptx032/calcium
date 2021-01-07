@@ -68,20 +68,15 @@ class SceneApplication(core.TerminalApplication):
 
 
 if __name__ == "__main__":
-    from calcium import draw
-
-    class RawFilter(core.BaseFilter):
-        def __init__(self, pixels: typing.List[int]):
-            self._pixels = pixels
-
-        def get(self, pixels):
-            return self._pixels
+    from calcium import draw, filters
 
     class LineScene(Scene):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.sprite = core.Sprite(
-                filters=[RawFilter(draw.line(0, 0, 10, 0))], x=10, y=10
+                filters=[filters.RawPixelsFilter(draw.line(0, 0, 10, 0))],
+                x=10,
+                y=10,
             )
             self.sprites.append(self.sprite)
             self.bind("q", lambda *args: self.app.quit())
@@ -94,7 +89,9 @@ if __name__ == "__main__":
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.sprite = core.Sprite(
-                filters=[RawFilter(draw.rectangle(10, 10))], x=20, y=20
+                filters=[filters.RawPixelsFilter(draw.rectangle(10, 10))],
+                x=20,
+                y=20,
             )
             self.sprites.append(self.sprite)
             self.bind("q", lambda *args: self.app.quit())

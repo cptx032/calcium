@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import time
-import typing
+from typing import Any, Callable, List, Union
 
 from PIL import Image
 from PIL.ImageDraw import Draw
@@ -11,17 +11,17 @@ from calcium import core
 
 
 class RawPixelsFilter(core.BaseFilter):
-    def __init__(self, pixels: typing.List[int]):
+    def __init__(self, pixels: List[int]):
         super().__init__()
-        self._pixels: typing.List[int] = pixels
+        self._pixels: List[int] = pixels
 
-    def get(self, pixels: typing.List[int]) -> typing.List[int]:
+    def get(self, pixels: List[int]) -> List[int]:
         return self._pixels
 
 
 class InvertFilter(core.BaseFilter):
-    def get(self, pixels: typing.List[int]) -> typing.List[int]:
-        new_pixels: typing.List[int] = []
+    def get(self, pixels: List[int]) -> List[int]:
+        new_pixels: List[int] = []
 
         for i in range(0, len(pixels), 3):
             x = pixels[i]
@@ -34,20 +34,20 @@ class InvertFilter(core.BaseFilter):
 class BoundsFilter(core.BaseFilter):
     """Just add a width/height property to sprite."""
 
-    def __init__(self, sprite: core.Sprite):
+    def __init__(self, sprite: core.Sprite, **kwargs):
         self.sprite = sprite
         self.calc_dimensions()
-        super().__init__()
+        super().__init__(**kwargs)
 
-    def get(self, pixels: typing.List[int]) -> typing.List[int]:
+    def get(self, pixels: List[int]) -> List[int]:
         return pixels
 
     def calc_dimensions(self):
-        data: typing.List[int] = self.sprite.get_pixels()
-        minx: typing.Union[None, int] = None
-        miny: typing.Union[None, int] = None
-        maxx: typing.Union[None, int] = None
-        maxy: typing.Union[None, int] = None
+        data: List[int] = self.sprite.get_pixels()
+        minx: Union[None, int] = None
+        miny: Union[None, int] = None
+        maxx: Union[None, int] = None
+        maxy: Union[None, int] = None
         if data:
             for i in range(0, len(data), 3):
                 x = data[i]
@@ -78,19 +78,19 @@ class BoundsFilter(core.BaseFilter):
 
 class ImageUtils:
     @staticmethod
-    def get_rgb_tuple_from_str(color: str) -> typing.List[int]:
+    def get_rgb_tuple_from_str(color: str) -> List[int]:
         return [
             int(color.replace("#", "")[i : i + 2], 16) for i in range(0, 6, 2)
         ]
 
     @staticmethod
     def get_pixels_from_image(
-        image: typing.Any, threshold: float = 255 / 2
-    ) -> typing.List[int]:
-        data: typing.List[int] = []
+        image: Any, threshold: float = 255 / 2
+    ) -> List[int]:
+        data: List[int] = []
         for y in range(image.size[1]):
             for x in range(image.size[0]):
-                value: typing.Union[int, None] = ImageUtils.get_bw_value(
+                value: Union[int, None] = ImageUtils.get_bw_value(
                     image, x, y, threshold
                 )
                 if value is not None:
@@ -98,7 +98,7 @@ class ImageUtils:
         return data
 
     @staticmethod
-    def get_images_from_gif(gif_path) -> typing.List[typing.Any]:
+    def get_images_from_gif(gif_path) -> List[Any]:
         image = Image.open(gif_path)
         palette = image.getpalette()
         images = list()
@@ -115,8 +115,8 @@ class ImageUtils:
 
     @staticmethod
     def get_bw_value(
-        image: typing.Any, x: int, y: int, threshold: float = 255 / 2
-    ) -> typing.Union[int, None]:
+        image: Any, x: int, y: int, threshold: float = 255 / 2
+    ) -> Union[int, None]:
         a = None
         color_components = image.getpixel((x, y))
         r, g, b = None, None, None
@@ -138,8 +138,8 @@ class ImageUtils:
     @staticmethod
     def get_images_from_spritesheet(
         image_path: str, cols: int, rows: int
-    ) -> typing.List[Image.Image]:
-        frames: typing.List[Image.Image] = list()
+    ) -> List[Image.Image]:
+        frames: List[Image.Image] = list()
         image: Image = Image.open(image_path)
         frame_width: int = int(image.size[0] / cols)
         frame_height: int = int(image.size[1] / rows)
@@ -155,30 +155,37 @@ class ImageUtils:
 class RawImageFilter(core.BaseFilter):
     def __init__(
         self,
-        image_path: typing.Union[str, None] = None,
-        image: typing.Union[typing.Any, None] = None,
+        image_path: Union[str, None] = None,
+        image: Union[Any, None] = None,
         threshold: float = 255 / 2,
+        **kwargs
     ):
         if image is None and image_path is None:
             raise ValueError("You must specify the image")
         pillow_image = None
+        self.threshold: float = threshold
         if image:
             pillow_image = image
         else:
             pillow_image = Image.open(image_path)
-        self._pixel_data: typing.List[int] = ImageUtils.get_pixels_from_image(
+        self._pixel_data: List[int] = ImageUtils.get_pixels_from_image(
             pillow_image, threshold
         )
-        super().__init__()
+        super().__init__(**kwargs)
 
-    def get(self, pixels: typing.List[int]) -> typing.List[int]:
+    def update_pixel_data_by_image(self, image: Image) -> None:
+        self._pixel_data = ImageUtils.get_pixels_from_image(
+            image, self.threshold
+        )
+
+    def get(self, pixels: List[int]) -> List[int]:
         return self._pixel_data
 
 
 class SpriteSheetFilter(core.BaseFilter):
     def __init__(
         self,
-        images: typing.List[typing.Any],
+        images: List[Any],
         frame_delay: float = 0.1,
         threshold: float = 255 / 2,
     ):
@@ -187,7 +194,7 @@ class SpriteSheetFilter(core.BaseFilter):
         assert frame_delay > 0
 
         self.frame_delay = frame_delay
-        self.frames: typing.List[typing.Any] = []
+        self.frames: List[Any] = []
         for image in images:
             if type(image) is str:
                 image = Image.open(image)
@@ -206,13 +213,13 @@ class SpriteSheetFilter(core.BaseFilter):
             self.current_frame = 0
         self.timer.after(self.frame_delay, self.next_frame)
 
-    def get(self, pixels: typing.List[int]) -> typing.List[int]:
+    def get(self, pixels: List[int]) -> List[int]:
         self.timer.tick()
         return self.frames[self.current_frame]
 
 
 class PlatformPhysicsFilter(BoundsFilter):
-    objects: typing.List[core.Sprite] = list()
+    objects: List[core.Sprite] = list()
     gravity: float = 0.1
 
     def __init__(
@@ -229,7 +236,7 @@ class PlatformPhysicsFilter(BoundsFilter):
         sprite["vely"] = vely
         # fixme > create a "on_touch_event"
 
-    def get(self, pixels: typing.List[int]) -> typing.List[int]:
+    def get(self, pixels: List[int]) -> List[int]:
         if not self.sprite["physics_static"]:
             self.sprite["vely"] += PlatformPhysicsFilter.gravity
         y_increase = self.sprite["vely"]
@@ -257,8 +264,8 @@ class PlatformPhysicsFilter(BoundsFilter):
         sprite["vely"] += y
 
     @staticmethod
-    def get_over_objects(sprite: core.Sprite) -> typing.List[core.Sprite]:
-        objects: typing.List[core.Sprite] = list()
+    def get_over_objects(sprite: core.Sprite) -> List[core.Sprite]:
+        objects: List[core.Sprite] = list()
         sprite["y"] += 1
         for obj in PlatformPhysicsFilter.objects:
             if obj == sprite:
@@ -308,7 +315,7 @@ class FadeFilter(core.BaseFilter):
         self,
         duration: float = 1.0,
         fadein: bool = True,
-        onend: typing.Union[None, typing.Callable] = None,
+        onend: Union[None, Callable] = None,
     ):
         """
         Arguments:
@@ -318,15 +325,15 @@ class FadeFilter(core.BaseFilter):
         self.duration: float = duration
         self.fadein: bool = fadein
         self.animation_x: float = 0.0
-        self.last_time: typing.Union[None, float] = None
-        self.onend: typing.Union[None, typing.Callable] = onend
+        self.last_time: Union[None, float] = None
+        self.onend: Union[None, Callable] = onend
 
         super().__init__()
 
     def restart(self):
         self.animation_x = 0.0
 
-    def get(self, pixels: typing.List[int]) -> typing.List[int]:
+    def get(self, pixels: List[int]) -> List[int]:
         if self.last_time is None:
             self.last_time = time.time()
         time_delta = time.time() - self.last_time
@@ -349,12 +356,12 @@ class FontUtils:
     _draw: Draw = Draw(Image.new("1", (1, 1)))
 
     @staticmethod
-    def get_font(font_path: str, font_size: int) -> typing.Any:
+    def get_font(font_path: str, font_size: int) -> Any:
         return truetype(font_path, font_size)
 
     @staticmethod
     def get_image_from_text(
-        font: typing.Any,
+        font: Any,
         text: str,
         fill: int = 1,
         align: str = "left",
