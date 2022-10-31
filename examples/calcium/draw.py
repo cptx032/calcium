@@ -68,7 +68,7 @@ def drawOval(
 def oval(
     width: int, height: int, color: int = 1, fill: bool = False
 ) -> typing.List[int]:
-	"""Return a pixel data with an oval.
+    """Return a pixel data with an oval.
 
     Args:
         width, height: controls the size of rectangle
