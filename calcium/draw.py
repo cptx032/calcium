@@ -52,7 +52,7 @@ def line(
 def drawOval(
     x: int, y: int, width: int, height: int, pixels, color: int
 ):
-    sides = 100
+    sides = 1000
     for i in range(1, sides):
         pointRatio = i / sides
         radians = pointRatio * 2 * 3.14
