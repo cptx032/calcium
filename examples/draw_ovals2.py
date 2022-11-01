@@ -24,8 +24,8 @@ class DrawOval(core.TerminalApplication):
 
         self.sprites = list()
 
-        for i in range(15):
-            self.oval = core.Sprite(x=50-(i*5), y=50-(i*5))
+        for i in range(20):
+            self.oval = core.Sprite(x=(self.width/2)-(i*5), y=(self.height/2)-(i*5))
             self.oval.filters.append(RawPixelsFilter(draw.oval(10+(i*10), 10+(i*10), 1, False)))
             self.sprites.append(self.oval)
 
