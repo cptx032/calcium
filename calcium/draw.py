@@ -1,7 +1,6 @@
 # coding utf-8
 
-import math
-import typing
+import math, typing
 
 # RECT
 def rectangle(
