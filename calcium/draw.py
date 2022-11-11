@@ -70,9 +70,9 @@ def oval(
 	"""Return a pixel data with an oval.
 
     Args:
-        width, height: controls the size of rectangle
+        width, height: controls the size of the oval
         color: 0 or 1
-        fill: controls the filling of rectangle
+        fill: controls the filling of the oval
     """
     pixels: typing.List[int] = list()
 
